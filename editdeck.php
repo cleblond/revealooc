@@ -459,7 +459,7 @@ $OUTPUT->bodyStart(false);
 
 $share=1;
 $tags = '';
-echo("<h3>Edit Slide Deck</h3>");
+//echo("<h3>Edit Slide Deck</h3>");
 //$OUTPUT->welcomeUserCourse();
 
 
@@ -473,8 +473,8 @@ echo("<h3>Edit Slide Deck</h3>");
 
 
 
-<div class="container">
-    <form id="questionEditForm" action="editquestion.php" method="post" >
+<div class="container-fluid">
+    <form id="questionEditForm" action="mydecks.php" method="post" >
     <input type="hidden" name="question_id" value="<?= $qid ?>" readonly>
     <input type="hidden" name="user_id" value="<?= $uid ?>" readonly>
     <input type="hidden" id ="ajaxkeepaliveurl" name="ajaxkeepaliveurl" value="<?php addSession('../ajax/keepalive.php')?>"  readonly>
@@ -483,9 +483,9 @@ echo("<h3>Edit Slide Deck</h3>");
     
     <!--  question options fields -->
     <div class="panel panel-default">
-        <div class="panel-heading">
-        Question Settings <?php //output_slide_modal(); ?>
-        </div>
+<!--        <div class="panel-heading">
+        Question Settings
+        </div> -->
         
         <!-- responsive filemanger integration -->
         <div id="subfolder" data-subfolder="<?=$_SESSION['RF']['subfolder']?>" ></div>
@@ -494,21 +494,54 @@ echo("<h3>Edit Slide Deck</h3>");
         
         <div class = "panel-body">
             <div class="row">
-                 <div class="col-md-12">
-                 <div class="form-group">
-                     <button class="editquesave btn btn-success" type="submit" name="save" value="save">Save</button>
-                     <a href='index.php' class="btn btn-warning" name="cancel"  formnovalidate>Cancel</a>
-                 
+                 <div class="col-md-2">
+                     <div class="form-group">
+                     Edit Slide Deck
+                         <button class="editquesave btn btn-success" type="submit" name="save" value="save">Save</button>
+                         <a href='index.php' class="btn btn-warning" name="cancel"  formnovalidate>Cancel</a>
+                         
+                         
+                         <div id="slidenum">Editing Slide: <span id="slidenumber">1</span></div>
+                         
+                         <div id="themeselect">Theme Select:<br>
+                            <select name="themename" id="themename">
+                            <option value="default">default</option>
+                            <option value="neon">neon</option>
+                            <option value="beige">beige</option>
+                            </select>
+                            </div>
+                            
+                            <div id="transelect">Transition Select:<br>
+                            <select name="transition" id="transition">
+                            <option value="default">default</option>
+                            <option value="cube">cube</option>
+                            <option value="page">page</option>
+                            <option value="concave">concave</option>
+                            <option value="linear">linear</option>
+                            </select>
+                            </div>
+                         
+                              
+                            <div id="slides_edit"></div>
+                         
+                     
+                     </div>
                  </div>
-                 </div>
-            </div>
+            <!--</div> 
         
-                <div class="row">
-                   <div class="col-md-12">    
+                <div class="row"> -->
+                   <div class="col-md-10">    
                         <div class="form-group">
-                        <label for="question_title">Slide Title</label>
-                        <input placeholder="Provide a title for this slide." type="text" class="form-control" name="question_title" id="question_title" value="<?= $questiontitle ?>">
+                        <label for="deck_title">Slide Title</label>
+                        <input placeholder="Provide a title for this slide deck" type="text" class="form-control" name="deck_title" id="deck_title" value="<?= $questiontitle ?>">
                         </div>
+                        
+                        
+                            
+                        
+                        
+                        
+                        
                         
                         <!-- Question specific options  -->
 
@@ -517,12 +550,12 @@ echo("<h3>Edit Slide Deck</h3>");
 
 
                         
-                        <div id="slidenum">Editing Slide: <span id="slidenumber">1</span></div>
+                        
                         <div class="form-group">
                             <label for="question_text">Slide Content</label><br/>
                            <!-- <a href="#" class="btn btn-info" id="cp1">Slide Color</a> -->
                             <input  type='hidden' id='slide_bgcolor' name = 'slide_bgcolor' value = "<?= $slide_bgcolor ?>"> <?php //if ($question_options->orientation_important == '0') echo "selected";?>
-                            <Textarea class="eofeedback" cols="72" name="question_text" id="question_text"><?= $questiontext ?></textarea>
+                            <Textarea style="height: 460px;" class="eofeedback"  name="question_text" id="question_text"><?= $questiontext ?></textarea>
                         </div>
                         
                         <button type="button" id="savenext" onclick="saveNext();">Save and Next Slide</button>
@@ -546,6 +579,9 @@ echo("<h3>Edit Slide Deck</h3>");
                              <textarea id="tags" placeholder="Comma separated list of tags" name = "tags" class="form-control"><?=$tags?></textarea>
                        </div>
                              
+                        
+                             
+                             
                    </div> <!-- close md12 -->
                        
                </div> <!-- close row -->
@@ -554,8 +590,9 @@ echo("<h3>Edit Slide Deck</h3>");
     </div><!-- panel-default -->
 
 
+<div id="deckslides">   </div>
+<textarea name="deckslidesta" id="deckslidesta">   </textarea>
 
-<div id="slides_edit"></div>
 
 
 
@@ -583,13 +620,17 @@ $(document).ready(function () {
 	tinymce.init({
       menubar: true,
       statusbar: true,
-      resize: 'both',
+      width: '800',
+      //height: '720',
+      max_height: '600',
+      max_width: '800',
+      resize: false,
 	  selector: '.eofeedback',
 	  browser_spellcheck : true,
 	  relative_urls: false,
 	  visualblocks_default_state: true,
 	  content_css: 'css/mce-styles.css', 
-	  //height: 200,
+	  resize: true,
 	  plugins: [
 	    'advlist autolink autoresize lists link image charmap print preview anchor',
 	    'searchreplace visualblocks code fullscreen noneditable',

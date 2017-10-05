@@ -36,17 +36,19 @@
 		document.querySelector('#slides_edit').appendChild(oldslide);
 	}
 	function saveGenerate() {
-		var main_div = document.querySelector('#main');
-		var y = document.createElement('textarea');
-		y.id = 'mytextarea';
+		var main_div = document.querySelector('#deckslides');
+		//var y = document.createElement('textarea');
+		var y = document.querySelector('#deckslidesta');
+		//y.id = 'mytextarea';
 		var d = document.createElement('div');
-		var m_title = document.querySelector('#mytitle').value;
+		var m_title = document.querySelector('#deck_title').value;
 		var m_theme = document.querySelector('#themename').value;
 		var m_trans = document.querySelector('#transition').value;
 		d.appendChild(document.createTextNode("This is your generated code! Copy and paste it into a html page"));
 		//y.value = 'just testing this';
 		var completeCode = '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>'+m_title+'</title><meta name="apple-mobile-web-app-capable" content="yes" /><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /><link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reset.css"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/main.css"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/print.css" type="text/css" media="print"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/lib/css/zenburn.css"></head><body><div class="reveal"><div class="state-background"></div><div class="slides">';
 		for (i in slides) {
+		    console.log(i);
 			var section = '<section>';
 			section += slides[i];
 			section += '</section>';
@@ -59,6 +61,9 @@
 		main_div.innerHTML = '';
 		main_div.appendChild(d);
 		main_div.appendChild(y);
+		//var main_ta = document.querySelector('#deckslidesta');
+		//main_ta.value = main_div.innerHTML;
+		
 	}
     
     

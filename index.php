@@ -75,7 +75,8 @@ $OUTPUT->flashMessages();
 <br/>
 <a  href="editdeck.php">Edit Deck</a>
 
-
+<br/>
+<a  href="mydecks.php">My Decks</a>
 
 
 
