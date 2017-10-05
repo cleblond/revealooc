@@ -18,7 +18,39 @@ $displayname = $USER->displayname;
 //include("following_class.php");
 //$fol = new Following();
 
+
+
+  //create users file subfolder
+          
+          //clean up name of subfolder
+          $subfolder = str_replace(" ", "_", $displayname);
+          $subfolder = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $subfolder);
+          $subfolder = mb_ereg_replace("([\.]{2,})", '', $subfolder);
+          
+          //echo $subfolder;
+          
+          if (!file_exists('uploads/' . $subfolder)) {
+             mkdir('uploads/' . $subfolder, 0755, true);
+          }
+          
+          //assign to session for responsive filemanager
+          $_SESSION["RF"]["subfolder"] = $subfolder;
+
+
+
+
+
+
+
+
+
+
 echo "USERID=".$USER->id;
+
+
+
+
+
 
 
 if ( $USER->instructor ) {
@@ -38,6 +70,13 @@ $OUTPUT->flashMessages();
 
 
 <a  target="_blank" href="showdeck.php">Show Deck</a>
+
+
+<br/>
+<a  href="editdeck.php">Edit Deck</a>
+
+
+
 
 
 <?php
