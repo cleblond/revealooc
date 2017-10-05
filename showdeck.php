@@ -9,13 +9,15 @@ $p = $CFG->dbprefix;
 $displayname = $USER->displayname;
 
 
-$deck1 = '<section>Slide 1</section>
-		  <section>Slide 2</section>';
-		  
-		  
-$deck2 = '<section>Another Dec Slide 1</section>
-		  <section>Slide 2</section>';
 
+
+$id = 0;
+
+
+$sql = "SELECT * FROM {$p}eo_slidedecks WHERE id = $id";
+$sliderow = $PDOX->rowDie($sql);
+
+$deck = $sliderow['slides'];
 
 
 ?>
@@ -44,7 +46,7 @@ $deck2 = '<section>Another Dec Slide 1</section>
 	<body>
 		<div class="reveal">
 			<div class="slides">
-<?= $deck1 ?>
+<?= $deck ?>
 			</div>
 		</div>
 
