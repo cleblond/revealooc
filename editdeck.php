@@ -496,22 +496,22 @@ $tags = '';
             <div class="row">
                  <div class="col-md-2">
                      <div class="form-group">
-                     Edit Slide Deck
+                     <label>Edit Slide Deck</label>
                          <button class="editquesave btn btn-success" type="submit" name="save" value="save">Save</button>
                          <a href='index.php' class="btn btn-warning" name="cancel"  formnovalidate>Cancel</a>
                          
+                         <br/><br/>
                          
-                         <div id="slidenum">Editing Slide: <span id="slidenumber">1</span></div>
-                         
-                         <div id="themeselect">Theme Select:<br>
+                         <label>Options</label>
+                         <div id="themeselect">Theme:
                             <select name="themename" id="themename">
                             <option value="default">default</option>
                             <option value="neon">neon</option>
                             <option value="beige">beige</option>
                             </select>
                             </div>
-                            
-                            <div id="transelect">Transition Select:<br>
+                            <br/>
+                            <div id="transelect">Transition:
                             <select name="transition" id="transition">
                             <option value="default">default</option>
                             <option value="cube">cube</option>
@@ -521,7 +521,7 @@ $tags = '';
                             </select>
                             </div>
                          
-                              
+                              <label>Slides</label>
                             <div id="slides_edit"></div>
                          
                      
@@ -532,7 +532,7 @@ $tags = '';
                 <div class="row"> -->
                    <div class="col-md-10">    
                         <div class="form-group">
-                        <label for="deck_title">Slide Title</label>
+                        <label for="deck_title">Deck Title</label>
                         <input placeholder="Provide a title for this slide deck" type="text" class="form-control" name="deck_title" id="deck_title" value="<?= $questiontitle ?>">
                         </div>
                         
@@ -552,7 +552,7 @@ $tags = '';
                         
                         
                         <div class="form-group">
-                            <label for="question_text">Slide Content</label><br/>
+                            <label for="question_text">Slide Content</label><div id="slidenum">Editing Slide: <span id="slidenumber">1</span></div>
                            <!-- <a href="#" class="btn btn-info" id="cp1">Slide Color</a> -->
                             <input  type='hidden' id='slide_bgcolor' name = 'slide_bgcolor' value = "<?= $slide_bgcolor ?>"> <?php //if ($question_options->orientation_important == '0') echo "selected";?>
                             <Textarea style="height: 460px;" class="eofeedback"  name="question_text" id="question_text"><?= $questiontext ?></textarea>
