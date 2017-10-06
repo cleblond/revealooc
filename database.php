@@ -13,6 +13,7 @@ array( "{$CFG->dbprefix}eo_slidedecks",
     user_id     INTEGER NOT NULL,
     description        TEXT NOT NULL,
     slides       TEXT NOT NULL,
+    share        TINYINT DEFAULT 0,
     options      TEXT NOT NULL,
     updated_at  DATETIME NOT NULL,
     UNIQUE(id)

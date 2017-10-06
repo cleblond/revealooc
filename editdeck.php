@@ -410,7 +410,7 @@ $tags = '';
 
 <link href="js/jquery-ui.min.css" rel="stylesheet">
 <!-- <link rel="stylesheet" href="styles.css" type="text/css"> -->
-<!-- <link rel="stylesheet" href="css/eocustom.css" type="text/css"> -->
+<link rel="stylesheet" href="css/mce-reveal-styles.css" type="text/css">
 <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="js/editdeck.js"></script>
 
@@ -437,7 +437,7 @@ $(document).ready(function () {
 	  browser_spellcheck : true,
 	  relative_urls: false,
 	  visualblocks_default_state: true,
-	  content_css: 'css/mce-styles.css', 
+	  content_css: 'css/mce-reveal-styles.css', 
 	  resize: true,
 	  plugins: [
 	    'advlist autolink autoresize lists link image charmap print preview anchor',

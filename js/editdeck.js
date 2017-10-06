@@ -29,9 +29,17 @@ document.addEventListener("DOMContentLoaded", function(){
 	var edit_slide = false;
 	function loadSlide(slide) {
 //		CKEDITOR.instances["editor_kama"].setData( slides[slide] );
+
+        saveSlide();
 		tinymce.activeEditor.setContent( slides[slide] );
 		document.getElementById('slidenumber').innerHTML = slide+1;
+        //save current changes to slide
+		
+		
+		
 		edit_slide = slide;
+		
+		
 	}
 	function saveNext() {
 		if (!edit_slide) {
@@ -42,13 +50,39 @@ document.addEventListener("DOMContentLoaded", function(){
 			slides[edit_slide] = tinyMCE.get('question_text').getContent();
 		}
 		//CKEDITOR.instances["editor_kama"].setData( '' );
-        tinymce.activeEditor.setContent( '' );
+		
+		
+		var newslidetmpl = '<div class="mceTmpl">' +
+                           '<h1 style="text-align: center;"><span style="font-size: 36pt;">TITLE</span></h1>' +
+                           '<ul>' +
+                           '<li style="text-align: left;"><span style="font-size: 18pt;">Point 1</span></li>' +
+                           '<li style="text-align: left;"><span style="font-size: 18pt;">Point 2</span></li>' +
+                           '<li style="text-align: left;"><span style="font-size: 18pt;">Point 3</span></li>' +
+                           '</ul>' +
+                           '</div>';
+		
+		
+		
+        tinymce.activeEditor.setContent( newslidetmpl );
         //get('question_text')
 		document.getElementById('slidenumber').innerHTML = slides_num;
 		edit_slide = false;
-		
+	}
+	
+	function saveSlide() {
+		if (!edit_slide) {
+			
+		} else {
+		    console.log(slides);
+			slides[edit_slide] = tinyMCE.get('question_text').getContent();
+			console.log(tinyMCE.get('question_text').getContent());
+			console.log($("[num="+(edit_slide+1)+"]"));
+			$("[num="+(edit_slide+1)+"]").html(tinyMCE.get('question_text').getContent());
+		}
+		//CKEDITOR.instances["editor_kama"].setData( '' );		
 		
 	}
+	
 	
     function createNumNode(slides_num) {
 		var oldslide = document.createElement('div');
@@ -62,10 +96,13 @@ document.addEventListener("DOMContentLoaded", function(){
 		oldslide.setAttribute("num",slides_num);
 		oldslide.onclick = function() {
 			loadSlide(parseInt(this.getAttribute("num"))-1);
+			 $(this).children("*").css('opacity', 1);
+			$('#slides_edit').children("*").css('border', "dashed");
+			this.style.border = "thick solid #0000FF";
 		};
 		
 		$maxWidth = $("#slides_edit").width();
-		
+		var originy = (slides_num - 1) * -98;
 		var fScaleAmount = 0.3;
 		$(oldslide).css({
 		"height" : "400px",
@@ -73,11 +110,11 @@ document.addEventListener("DOMContentLoaded", function(){
 		"border-style" : "dashed",
 		"display" : "flex",
         "-moz-transform": "scale(" + fScaleAmount + ")",
-        "-moz-transform-origin": "0% -98%",
+        "-moz-transform-origin": "0% " + originy + "%",
         "-webkit-transform": "scale(" + fScaleAmount + ")",
-        "-webkit-transform-origin": "0% -98%",
+        "-webkit-transform-origin": "0% " + originy + "%",
         "-ms-transform": "scale(" + fScaleAmount + ")",
-        "-ms-transform-origin": "0% 0%",
+        "-ms-transform-origin": "0% " + originy + "%",
 
        });
 				
