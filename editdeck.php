@@ -305,7 +305,7 @@ $tags = '';
                  <div class="col-md-2">
                      <div class="form-group">
                      <label>Edit Slide Deck</label>
-                         <button class="editquesave btn btn-success" type="submit" name="save" value="save">Save</button>
+                         <button class="editquesave btn btn-success" onclick="saveGenerate();" type="submit" name="save" value="save">Save</button>
                          <a href='index.php' class="btn btn-warning" name="cancel"  formnovalidate>Cancel</a>
                          
                          <br/><br/>

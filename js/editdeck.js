@@ -16,9 +16,37 @@ document.addEventListener("DOMContentLoaded", function(){
     //console.log(doc.body.children[i].innerHTML);
   }
   
- console.log(slides);
+ //console.log(slides);
   //console.log('HERE');
 });
+
+
+ $(function() {
+        console.log('HERE WE GO');
+        $.contextMenu({
+            selector: '.context-menu-one', 
+            callback: function(key, options) {
+                var m = "clicked: " + key;
+                window.console && console.log(m) || alert(m); 
+            },
+            items: {
+                "edit": {name: "Edit", icon: "edit"},
+                "cut": {name: "Cut", icon: "cut"},
+               copy: {name: "Copy", icon: "copy"},
+                "paste": {name: "Paste", icon: "paste"},
+                "delete": {name: "Delete", icon: "delete"},
+                "sep1": "---------",
+                "quit": {name: "Quit", icon: function(){
+                    return 'context-menu-icon context-menu-icon-quit';
+                }}
+            }
+        });
+
+        $('.context-menu-one').on('click', function(e){
+            console.log('clicked', this);
+        })    
+    });
+
 
 
 
@@ -29,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	var edit_slide = false;
 	function loadSlide(slide) {
 //		CKEDITOR.instances["editor_kama"].setData( slides[slide] );
-
+        
         saveSlide();
 		tinymce.activeEditor.setContent( slides[slide] );
 		document.getElementById('slidenumber').innerHTML = slide+1;
@@ -70,10 +98,12 @@ document.addEventListener("DOMContentLoaded", function(){
 	}
 	
 	function saveSlide() {
-		if (!edit_slide) {
-			
+	
+	    console.log('edit_slide=' + edit_slide);
+		if (edit_slide == 'false') {
+			console.log('here slide not set');
 		} else {
-		    console.log(slides);
+		    
 			slides[edit_slide] = tinyMCE.get('question_text').getContent();
 			console.log(tinyMCE.get('question_text').getContent());
 			console.log($("[num="+(edit_slide+1)+"]"));
@@ -94,6 +124,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 		oldslide.style.cursor = 'pointer';
 		oldslide.setAttribute("num",slides_num);
+		oldslide.setAttribute("class", "context-menu-one");
 		oldslide.onclick = function() {
 			loadSlide(parseInt(this.getAttribute("num"))-1);
 			 $(this).children("*").css('opacity', 1);
