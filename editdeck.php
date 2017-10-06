@@ -26,225 +26,23 @@ if ( ! $USER->instructor ) die("Requires instructor role");
 
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ( isset($_POST['cancel'])) {
-    
-       if(isset($_POST['question_id'])) {
-       
-       ///unlock the question
-       
-        $savequery = "UPDATE {$p}eo_questions SET time_locked = 0 WHERE question_id = :QID";
-            
-            
-            //echo $savequery;
-
-                $PDOX->queryDie($savequery,
-		    array(
-		        ':QID' => $_POST['question_id']
-		    )
-	        );
-       
-       
-       
-       
-       }
-       
-       header('Location: '.addSession('../../myquestions.php'));
-    
-
-    } else {
-            //var_dump($_POST);
-            //echo '<pre>' . var_export($_POST, true) . '</pre>';
-
-            if (isset($_POST['share'])) {
-                $share = 1;
-            } else {
-                $share = 0;
-            }
-            
-
-            
-            
-            
-            
-            if(isset($_POST['question_id'])) {
-            $qid = intval($_POST['question_id']);
-            } else {
-            $qid = null;
-            }
-            
-            
-            if (isset($_POST['text_response'])) {
-            $text_response = 1;
-            } else {
-            $text_response = 0;
-            }
-            
-            //var_dump($_POST);
-            
-            //$question_type = $_POST['question_type'];
-            
-            $question_options = new StdClass;
-            //$question_options->choose_template = $_POST['choose_template'];
-            $question_options->slide_bgcolor = $_POST['slide_bgcolor'];
-            
-            
-            
-            
-            //if (isset($_POST['ignore_case'])) {
-            //$question_options->slide_bgcolor = '#000000';
-            //    $ignore_case = "checked";
-                //$share = 1;
-            //} else {
-            //    $question_options->ignore_case = 0;
-            //    $ignore_case = "";
-            //}
-            
-            
-            
-            //$question_options->conform_important = $_POST['conform_important'];
-            //$question_options->eclip_stag_important = $_POST['eclip_stag_important'];
-            
-            
-            
-           require_once '../../htmlpurifier_library/HTMLPurifier.auto.php';
-           $purifier = new HTMLPurifier();
-    
-           $clean_question_title = $purifier->purify($_POST["question_title"]);
-           
-           
-           
-           
-           
-           
-            
-            
-            
-            if ($acl->has_permissions('trusted', $USER->id)) {
-                    $clean_question_text = $_POST['question_text'];
-            } else {
-           //         require_once '../../htmlpurifier_library/HTMLPurifier.auto.php';
-            //        $purifier = new HTMLPurifier();
-                    $clean_question_text = $purifier->purify($_POST['question_text']);
-            }
-            
-            
-            $catid = $_POST['category_id'];
-
-              ///must be new question
-            $savequery = "INSERT INTO {$p}eo_questions
-                (question_id, link_id, user_id, share, text_response, category_id, question_type, question_title, question_text, positive_feedback, negative_feedback, difficulty, taxonomy, tags, question_options, created_at, updated_at)
-                VALUES (:QID, :LI, :UI, :SHA, :TRE, :CID, :QTY, :QTT, :QTX, :FPO, :FNE, :DIF, :TAX, :TAG, :QOP, NOW(), NOW() )
-                ON DUPLICATE KEY UPDATE category_id=:CID, question_type=:QTY, share=:SHA, text_response=:TRE, question_title=:QTT, question_text=:QTX, positive_feedback=:FPO, negative_feedback=:FNE, difficulty=:DIF, taxonomy=:TAX, tags=:TAG, question_options=:QOP, updated_at = NOW(), time_locked = 0";
-
-
-	            $PDOX->queryDie($savequery,
-		        array(
-		            ':QID' => $qid,
-		            ':LI' => $LINK->id,
-		            ':UI' => $USER->id,
-		            ':CID' => $catid,
-		            ':QI' => $_POST["question_id"],
-		            ':QTY' => 'slide',
-		            ':FPO' => '',
-		            ':FNE' => '',
-		            ':QOP' => JSON_encode($question_options),
-		            ':QTX' => $clean_question_text,
-		            ':QTT' => $clean_question_title,
-		            ':DIF' => $_POST["difficulty"],
-		            ':TAX' => $_POST["taxonomy"],
-		            ':TAG' => $_POST["tags"],
-		            ':TRE' => $text_response,
-		            ':SHA' => $share
-		        )
-	            );
-
-                    $question_id = $PDOX->lastInsertId();
-
-            	//$i=1;
-            	
-            	//var_dump($_POST);
-            	
-            	
-            	
-
-            	
-            	
-            	/*
-            	foreach($_POST['answerother'] as $answerother) {
-                //echo "<br/>answer=".$answer;
-                   //$smiles = openbabel_convert_molfile($_POST['answermolfile'][$i], 'can');
-                   
-
-            	  if ($acl->has_permissions('trusted', $USER->id)) {
-                        $clean_feedback = $_POST['feedback'][$i];
-                  } else {
-                        require_once '../../htmlpurifier_library/HTMLPurifier.auto.php';
-                        $purifier = new HTMLPurifier();
-                        $clean_feedback = $purifier->purify($_POST['feedback'][$i]);
-                  }
 
 
 
-                //check to see if this correct box is checked
-                $chkname = 'correct';
-                $value = $i+1;
-                $correct=is_checked($chkname,$value);
-                
-                //echo "<br/>Checked=".$correct;
-                
-                
-                if(isset($_POST["answer_id"][$i])) {
-                $aid = intval($_POST["answer_id"][$i]);
-                } else {
-                $aid = Null;
-                }
-                
-
-	          $savesql = "INSERT INTO {$p}eo_answers
-		        (answer_id, question_id, correct, answersmiles, answermolfile, answerjson, answerother, feedback, updated_at)
-		        VALUES (:AID, :QID, :COR, :ANS, :ANM, :ANJ, :ANO, :FBK, NOW())
-		        ON DUPLICATE KEY UPDATE correct=:COR, answersmiles=:ANS, answermolfile=:ANM, answerjson=:ANJ, answerother=:ANO, feedback=:FBK, updated_at = NOW()";
-		           $PDOX->queryDie($savesql,
-			        array(
-			            ':AID' => $aid,
-			            //':AID' => '10',
-			            ':QID' => $question_id,
-                        ':COR' => $_POST['correct'][$i],
-			            ':ANS' => '',
-			            ':ANM' => '',
-			            ':ANJ' => '',
-			            ':ANO' => $_POST['answerother'][$i],
-			            ':FBK' => $_POST['feedback'][$i]
-			        )
-		            ); 
-            	$i++;
-            	}
-            	
-            	*/
-            	//echo "here2";
-
-
-
-        $_SESSION['success'] = "Question Saved!";
-        header('Location: '.addSession('../../myquestions.php'));
-
-    }   //close POST['save']
-} //close POST check
-
-
             
             
             
             
-if (isset($_GET['question_id'])) {
-        //Must be editing question
-        $qid =  intval($_GET['question_id']);
+if (isset($_GET['slidedeck_id'])) {
+        //Must be editing slide
+        $slidedeck_id =  intval($_GET['slidedeck_id']);
 	    //Retrieve a question 
-	    $row = $PDOX->rowDie("SELECT * FROM {$p}eo_questions
-	        WHERE question_id = " . $qid
+	    $row = $PDOX->rowDie("SELECT * FROM {$p}eo_slidedecks
+	        WHERE id = " . $slidedeck_id
 	    );
 
+
+        /*
         //get csv of users groups
         $group_id_csv = $grp->user_groups($USER->id);
         ///Check to see if allowed to edit
@@ -269,24 +67,19 @@ if (isset($_GET['question_id'])) {
             }
         }
         
-        $question_options = json_decode($row['question_options']);
+        */
+        
+        
+        
         
        //$question_options = json_decode($row['question_options']);
        //var_dump($question_options);
-       $slide_bgcolor = $question_options->slide_bgcolor;
+       //$slide_bgcolor = $slide_options->slide_bgcolor;
         
+        
+
         
         /*
-        if ($question_options->ignore_case == 1) {
-        $ignore_case = "checked";
-        } else {
-        $ignore_case = "";
-        }
-        */
-        
-        //var_dump($question_options);
-        
-        
          //check to see if question is locked by another user if not lock it
         $locked_by = $grp->lock_question($USER->id, $qid);
         if($locked_by == '') {
@@ -299,16 +92,14 @@ if (isset($_GET['question_id'])) {
 		            return;
         
         };
+        */
         
-        
-   
-     
-        
-        $difficulty = $row['difficulty'];
-        $taxonomy = $row['taxonomy'];
-        $tags = $row['tags'];
+        //$tags = $row['tags'];
         
                 ///setup html for select category_id
+
+
+        /*
         //$group_id_csv = $grp->user_groups($USER->id);
         if ($group_id_csv) {
             $getcatidsql = "SELECT category_id, parent_id, category_name FROM eo_categories WHERE user_id = ".$USER->id .  " OR group_id IN (".$group_id_csv.")";
@@ -331,39 +122,56 @@ if (isset($_GET['question_id'])) {
                 $selhtml .= "<option value='".$cat['category_id']."' ".$checked.">".$cat['category_name']."</option>";
             }
         $selhtml .= '</select></div>';
-
+        */
 
 
 	//$oldguess = $row ? $row['guess'] : '';
 	//update fields with current question data.
-	if ($row){
-	$questiontext =  $row['question_text'];
-	$questiontitle = $row['question_title'];
+	            if ($row){
+	            
+	            $slide_options = json_decode($row['options']);
+	            $slides =  $row['slides'];
+	            
+	            //get first section /slide
+	            
+	            $first = strstr($slides, '<section>');
+	            $second = strstr($first, '</section>');
+	            $firstslide = str_replace($second, "", $first);
+	            
+	            
+	            $firstslide =  str_replace("<section>","", $firstslide);
+	            $firstslide =  str_replace("</section>","", $firstslide);
+	            //$firstslide =  str_replace($firstslide,"</section>","");
+	            //$firstslide = ltrim($firstslide, '<section>');
+	            //echo "<pre>".$firstslide."</pre>";
+	            //$firstslide = rtrim($firstslide, '</section>');
+	            //echo $final;
+	            
+	            
+	            
+	            
+	            $decktitle = $row['description'];
 	
-	//$question_type =  $row['question_type'];
-        //$cid = $row['category_id'];
-        $title = "Editing Slide";
-        //$qid = $row['question_text'];
-        $uid = $row['user_id'];
-	//$share =  $row['share'];
-            if ($row['share'] == 1){
-                $share = "checked";
-            } else {
-                $share = "";
-            }
-            
-            if ($row['text_response'] == 1){
-                $text_response = "checked";
-            } else {
-                $text_response = "";
-            }
-            
-        $feedbackpos = $row['positive_feedback'];
-        $feedbackneg = $row['negative_feedback'];
-            
-            
-            
-	}
+	            //$question_type =  $row['question_type'];
+                    //$cid = $row['category_id'];
+                    //$title = "Editing Slide";
+                    //$qid = $row['question_text'];
+                    $uid = $row['user_id'];
+	            //$share =  $row['share'];
+                        if ($row['share'] == 1){
+                            $share = "checked";
+                        } else {
+                            $share = "";
+                        }
+                        
+                       
+                        
+                    //$feedbackpos = $row['positive_feedback'];
+                    //$feedbackneg = $row['negative_feedback'];
+                        
+                        
+                        
+	            }
 
        
 
@@ -372,9 +180,9 @@ if (isset($_GET['question_id'])) {
 
 
 } else {
-    //Must be new question
+    //Must be new slide
 
-        $questiontext = '
+        $firstslide = '
 <div class="mceTmpl">
 <h1 style="text-align: center;"><span style="font-size: 36pt;">TITLE</span></h1>
 <ul>
@@ -383,15 +191,15 @@ if (isset($_GET['question_id'])) {
 <li style="text-align: left;"><span style="font-size: 18pt;">Point 3</span></li>
 </ul>
 </div>';
-        $questiontitle = '';
-        $question_type = 'slide';
-
+        $decktitle = '';
+        //$question_type = 'slide';
+        $slides = '';
         //$feedback = '';
-        $qid = '';
-        $difficulty = '0';
-        $taxonomy = '0';
+        $slidedeck_id = '';
+        //$difficulty = '0';
+        //$taxonomy = '0';
         $tags = '';
-        
+        $share = '';
         //$question_options = new stdClass();
         //$question_options->slide_bgcolor = '#000000';
         $slide_bgcolor = '#ffffff';
@@ -400,14 +208,14 @@ if (isset($_GET['question_id'])) {
         //$question_options->choose_template = '0';
         
         
-        
+        /*
         //Take care of requests from grouppage
         if (isset($_GET['gid'])) {
             $gid = intval($_GET['gid']);
         } else {
             $gid = '';
         }
-        
+        */
         
         
         /*
@@ -419,7 +227,7 @@ if (isset($_GET['question_id'])) {
 
         $uid = $USER->id;
         $title = "Create Slide";
-        $share = '';
+        
         $text_response = '';
 		
 		///setup html for select category_id
@@ -457,7 +265,7 @@ if (isset($_GET['question_id'])) {
 $OUTPUT->header();
 $OUTPUT->bodyStart(false);
 
-$share=1;
+//$share='';
 $tags = '';
 //echo("<h3>Edit Slide Deck</h3>");
 //$OUTPUT->welcomeUserCourse();
@@ -501,7 +309,7 @@ $tags = '';
                          <a href='index.php' class="btn btn-warning" name="cancel"  formnovalidate>Cancel</a>
                          
                          <br/><br/>
-                         
+                         <input  type="hidden"  name="slidedeck_id" value="<?=$slidedeck_id ?>">
                          <label>Options</label>
                          <div id="themeselect">Theme:
                             <select name="themename" id="themename">
@@ -533,7 +341,7 @@ $tags = '';
                    <div class="col-md-10">    
                         <div class="form-group">
                         <label for="deck_title">Deck Title</label>
-                        <input placeholder="Provide a title for this slide deck" type="text" class="form-control" name="deck_title" id="deck_title" value="<?= $questiontitle ?>">
+                        <input placeholder="Provide a title for this slide deck" type="text" class="form-control" name="deck_title" id="deck_title" value="<?= $decktitle ?>">
                         </div>
                         
                         
@@ -555,7 +363,7 @@ $tags = '';
                             <label for="question_text">Slide Content</label><div id="slidenum">Editing Slide: <span id="slidenumber">1</span></div>
                            <!-- <a href="#" class="btn btn-info" id="cp1">Slide Color</a> -->
                             <input  type='hidden' id='slide_bgcolor' name = 'slide_bgcolor' value = "<?= $slide_bgcolor ?>"> <?php //if ($question_options->orientation_important == '0') echo "selected";?>
-                            <Textarea style="height: 460px;" class="eofeedback"  name="question_text" id="question_text"><?= $questiontext ?></textarea>
+                            <Textarea style="height: 460px;" class="eofeedback"  name="question_text" id="question_text"><?= $firstslide ?></textarea>
                         </div>
                         
                         <button type="button" id="savenext" onclick="saveNext();">Save and Next Slide</button>
@@ -590,8 +398,8 @@ $tags = '';
     </div><!-- panel-default -->
 
 
-<div id="deckslides">   </div>
-<textarea name="deckslidesta" id="deckslidesta">   </textarea>
+<!-- <div id="deckslides">   </div> -->
+<textarea name="deckslidesta" id="deckslidesta"><?= $slides ?></textarea>
 
 
 

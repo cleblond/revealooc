@@ -1,5 +1,30 @@
+var slides = new Array();
+
+
+document.addEventListener("DOMContentLoaded", function(){
+  //var slides = new Array();
+  var xmlString = document.querySelector('#deckslidesta').value;
+  parser = new DOMParser();
+  doc = parser.parseFromString(xmlString, "text/html");
+  
+  console.log(doc.body.children);
+  
+  for (var i = 0; i < doc.body.children.length; i++) {
+  
+     slides.push(doc.body.children[i].innerHTML);
+     createNumNode(i + 1);
+    //console.log(doc.body.children[i].innerHTML);
+  }
+  
+ console.log(slides);
+  //console.log('HERE');
+});
+
+
+
+
    /////////////////////////////////////////////////////reveal control
-    var slides = new Array();
+    
 	var slides_num = 1;
 	var edit_slide = false;
 	function loadSlide(slide) {
@@ -24,6 +49,37 @@
 		
 		
 	}
+	
+    function createNumNode(slides_num) {
+		var oldslide = document.createElement('div');
+		
+		//oldslide.appendChild(document.createTextNode("Click to load Slide: "+slides_num));
+		
+		//oldslide.appendChild(slides[slides_num]);
+        oldslide.innerHTML = slides[slides_num-1];
+
+		oldslide.style.cursor = 'pointer';
+		oldslide.setAttribute("num",slides_num);
+		oldslide.onclick = function() {
+			loadSlide(parseInt(this.getAttribute("num"))-1);
+		};
+		
+		
+		var fScaleAmount = 0.2;
+		$(oldslide).css({
+        "-moz-transform": "scale(" + fScaleAmount + ")",
+        "-moz-transform-origin": "0% 0%",
+        "-webkit-transform": "scale(" + fScaleAmount + ")",
+        "-webkit-transform-origin": "0% 0%",
+        "-ms-transform": "scale(" + fScaleAmount + ")",
+        "-ms-transform-origin": "0% 0%",
+
+       });
+				
+		document.querySelector('#slides_edit').appendChild(oldslide);
+	}
+	
+	/*
 	function createNumNode(slides_num) {
 		var oldslide = document.createElement('div');
 		oldslide.appendChild(document.createTextNode("Click to load Slide: "+slides_num));
@@ -35,6 +91,7 @@
 		
 		document.querySelector('#slides_edit').appendChild(oldslide);
 	}
+	*/
 	function saveGenerate() {
 		var main_div = document.querySelector('#deckslides');
 		//var y = document.createElement('textarea');
@@ -59,13 +116,18 @@
 		//completeCode += '</div><style type="text/css"> #kodyright { position: fixed; bottom: 10px; left: 10px; font-size: 12px; } </style><div id="kodyright">generated with <a target="_blank" href="http://kodkod.org">kodkod auto RevealJS generator</a></div><aside class="controls"><a class="left" href="#">&#x25C4;</a><a class="right" href="#">&#x25BA;</a><a class="up" href="#">&#x25B2;</a><a class="down" href="#">&#x25BC;</a></aside><div class="progress"><span></span></div></div><script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"><\/script>';
 		//completeCode += '<script> head.js( !document.body.classList ? "lib/js/classList.js" : null ).js( "http://lab.hakim.se/reveal-js/js/reveal.js", function() {  var query = {}; location.search.replace( /[A-Z0-9]+?=(\w*)/gi, function(a) { query[ a.split( "=" ).shift() ] = a.split( "=" ).pop(); } ); Reveal.initialize({ controls: true, progress: true, history: true, theme: query.theme || "'+m_theme+'", transition: query.transition || "'+m_trans+'" }); } ); head.js( "http://lab.hakim.se/reveal-js/lib/js/highlight.js", function() { hljs.initHighlightingOnLoad(); } ); <\/script></body></html>';
 		y.value = sections;
+		console.log(sections);
 		main_div.innerHTML = '';
 		main_div.appendChild(d);
 		main_div.appendChild(y);
 		//var main_ta = document.querySelector('#deckslidesta');
-		//main_ta.value = main_div.innerHTML;
+		//main_ta.value = sections;
 		
 	}
+	
+	
+	
+	
     
     
     
