@@ -64,13 +64,18 @@ document.addEventListener("DOMContentLoaded", function(){
 			loadSlide(parseInt(this.getAttribute("num"))-1);
 		};
 		
+		$maxWidth = $("#slides_edit").width();
 		
-		var fScaleAmount = 0.2;
+		var fScaleAmount = 0.3;
 		$(oldslide).css({
+		"height" : "400px",
+		"width" : "500px",
+		"border-style" : "dashed",
+		"display" : "flex",
         "-moz-transform": "scale(" + fScaleAmount + ")",
-        "-moz-transform-origin": "0% 0%",
+        "-moz-transform-origin": "0% -98%",
         "-webkit-transform": "scale(" + fScaleAmount + ")",
-        "-webkit-transform-origin": "0% 0%",
+        "-webkit-transform-origin": "0% -98%",
         "-ms-transform": "scale(" + fScaleAmount + ")",
         "-ms-transform-origin": "0% 0%",
 
