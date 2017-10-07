@@ -331,7 +331,7 @@ $tags = '';
                             </div>
                          
                               <label>Slides</label>
-                            <div id="slides_edit" oncontextmenu="return false;"></div>
+                            <div style="display: inline;" id="slides_edit" oncontextmenu="return false;"></div>
                          
                      
                      </div>

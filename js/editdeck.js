@@ -4,18 +4,8 @@ var slides = new Array();
 //document.addEventListener("DOMContentLoaded", function(){
 $(document).ready(function() {
   //var slides = new Array();
-          var xmlString = document.querySelector('#deckslidesta').value;
-          parser = new DOMParser();
-          doc = parser.parseFromString(xmlString, "text/html");
-          
-          //console.log(doc.body.children);
-          
-          for (var i = 0; i < doc.body.children.length; i++) {
-          
-             slides.push(doc.body.children[i].innerHTML);
-             createNumNode(i + 1);
-            //console.log(doc.body.children[i].innerHTML);
-          }
+  
+              parseSlidesTA();
          
               //higligt first slide
               $('div[num="1"]').css('border', "thick solid #0000FF");
@@ -38,7 +28,9 @@ $(document).ready(function() {
                         
                              e.currentTarget.remove();
                              console.log(e.currentTarget.getAttribute("num"));
+                             slides.splice(e.currentTarget.getAttribute("num")-1, 1);
                              //deleteSlide();
+                             console.log(slides);
                         }
                         
                 
@@ -87,6 +79,27 @@ $(document).ready(function() {
         })
        */  
 });
+
+
+
+    function parseSlidesTA() {
+              var xmlString = document.querySelector('#deckslidesta').value;
+              parser = new DOMParser();
+              doc = parser.parseFromString(xmlString, "text/html");
+              
+              //console.log(doc.body.children);
+              
+              for (var i = 0; i < doc.body.children.length; i++) {
+              
+                 slides.push(doc.body.children[i].innerHTML);
+                 createNumNode(i + 1);
+                //console.log(doc.body.children[i].innerHTML);
+              }
+    }
+    
+    
+   
+          
 
 
     //context menu
@@ -185,7 +198,7 @@ $(document).ready(function() {
 		"height" : "400px",
 		"width" : "500px",
 		"border-style" : "dashed",
-		"display" : "flex",
+		"display" : "inline-block",
         "-moz-transform": "scale(" + fScaleAmount + ")",
         "-moz-transform-origin": "0% " + originy + "%",
         "-webkit-transform": "scale(" + fScaleAmount + ")",
