@@ -11,7 +11,16 @@ $displayname = $USER->displayname;
 
 
 
-$id = 0;
+///$id = 0;
+
+
+if (isset($_GET['slidedeck_id'])) {
+
+$id = intval($_GET['slidedeck_id']);
+} else {
+
+die;
+}
 
 
 $sql = "SELECT * FROM {$p}eo_slidedecks WHERE id = $id";

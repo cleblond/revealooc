@@ -1,27 +1,67 @@
 var slides = new Array();
 
 
-document.addEventListener("DOMContentLoaded", function(){
+//document.addEventListener("DOMContentLoaded", function(){
+$(document).ready(function() {
   //var slides = new Array();
-  var xmlString = document.querySelector('#deckslidesta').value;
-  parser = new DOMParser();
-  doc = parser.parseFromString(xmlString, "text/html");
-  
-  console.log(doc.body.children);
-  
-  for (var i = 0; i < doc.body.children.length; i++) {
-  
-     slides.push(doc.body.children[i].innerHTML);
-     createNumNode(i + 1);
-    //console.log(doc.body.children[i].innerHTML);
-  }
-  
+          var xmlString = document.querySelector('#deckslidesta').value;
+          parser = new DOMParser();
+          doc = parser.parseFromString(xmlString, "text/html");
+          
+          //console.log(doc.body.children);
+          
+          for (var i = 0; i < doc.body.children.length; i++) {
+          
+             slides.push(doc.body.children[i].innerHTML);
+             createNumNode(i + 1);
+            //console.log(doc.body.children[i].innerHTML);
+          }
+         
+              //higligt first slide
+              $('div[num="1"]').css('border', "thick solid #0000FF");
+              
+              
+              $( ".context-menu-one" ).contextmenu(function(e) {
+              e.preventDefault();
+                console.log(e);
+                $("#cntnr").css("left",e.pageX);
+                $("#cntnr").css("top",e.pageY);
+ // $("#cntnr").hide(100);        
+                $("#cntnr").fadeIn(200,startFocusOut());      
+              
+              
+                $("#items > li").click(function(){
+                        console.log($(this).text());
+                        console.log(e.currentTarget);
+                        
+                        if ($(this).text() == 'Delete') {
+                        
+                             e.currentTarget.remove();
+                             console.log(e.currentTarget.getAttribute("num"));
+                             //deleteSlide();
+                        }
+                        
+                
+                });
+              
+              
+              
+              
+                //alert( "Handler for .contextmenu() called." );
+                });
+                
+                
+                
+              
+              
+
  //console.log(slides);
   //console.log('HERE');
-});
+//});
 
 
- $(function() {
+// $(function() {
+        /*
         console.log('HERE WE GO');
         $.contextMenu({
             selector: '.context-menu-one', 
@@ -44,12 +84,18 @@ document.addEventListener("DOMContentLoaded", function(){
 
         $('.context-menu-one').on('click', function(e){
             console.log('clicked', this);
-        })    
-    });
+        })
+       */  
+});
 
 
-
-
+    //context menu
+    function startFocusOut(){
+      $(document).on("click",function(){
+      $("#cntnr").hide();        
+      $(document).off("click");
+      });
+    }
 
    /////////////////////////////////////////////////////reveal control
     

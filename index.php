@@ -69,11 +69,9 @@ $OUTPUT->flashMessages();
 ?>
 
 
-<a  target="_blank" href="showdeck.php">Show Deck</a>
-
 
 <br/>
-<a  href="editdeck.php">Edit Deck</a>
+<a  href="editdeck.php">Create Deck</a>
 
 <br/>
 <a  href="mydecks.php">My Decks</a>

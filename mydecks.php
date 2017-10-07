@@ -150,7 +150,7 @@ echo "<table class='table'>";
 foreach ($decks as $deck) {
      $share = ($deck['share'] == 0 ? 'No' : 'Yes');
     
-    echo "<tr><td>".$deck['description']. "</td><td>" . $deck['updated_at'] . "</td><td>" . $share . "</td><td><a href='editdeck.php?slidedeck_id=" . $deck['id'] . "'>Edit</a><a href='showdeck.php?slidedeck_id=" . $deck['id'] . "'>View</a></td></tr>";
+    echo "<tr><td>".$deck['description']. "</td><td>" . $deck['updated_at'] . "</td><td>" . $share . "</td><td><a href='editdeck.php?slidedeck_id=" . $deck['id'] . "'>Edit</a><a href='showdeck.php?slidedeck_id=" . $deck['id'] . "'>  View</a></td></tr>";
 
 }
  echo "</table>";

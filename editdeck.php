@@ -304,6 +304,7 @@ $tags = '';
             <div class="row">
                  <div class="col-md-2">
                      <div class="form-group">
+                     <span class = "context-menu-one">HERE</span>
                      <label>Edit Slide Deck</label>
                          <button class="editquesave btn btn-success" onclick="saveGenerate();" type="submit" name="save" value="save">Save</button>
                          <a href='index.php' class="btn btn-warning" name="cancel"  formnovalidate>Cancel</a>
@@ -330,7 +331,7 @@ $tags = '';
                             </div>
                          
                               <label>Slides</label>
-                            <div id="slides_edit"></div>
+                            <div id="slides_edit" oncontextmenu="return false;"></div>
                          
                      
                      </div>
@@ -614,8 +615,22 @@ $(document).ready(function () {
 
 
 
-
-
+<!-- menu for slide sorting -->
+ <div id='cntnr'>
+    <ul id='items'>
+      <li>+ Before</li>
+      <li>+ After</li>  
+    </ul>
+    <hr />
+    <ul id='items'>
+      <li>Move up</li>
+      <li>Move down</li>  
+    </ul>
+    <hr />
+    <ul id='items'>
+      <li>Delete</li>
+    </ul>
+  </div>
 
 
 
@@ -643,8 +658,17 @@ $OUTPUT->footerStart();
 
 
 ?>
+<!--
+  <link rel="stylesheet" href="https://swisnl.github.io/jQuery-contextMenu/css/screen.css" type="text/css"/>
+    <link rel="stylesheet" href="https://swisnl.github.io/jQuery-contextMenu/css/theme.css" type="text/css"/>
+    <link rel="stylesheet" href="https://swisnl.github.io/jQuery-contextMenu/css/theme-fixes.css" type="text/css"/> -->
+
 
 <script type="text/javascript" src="js/bootstrapValidator.min.js"></script>
+
+<!--
+<script type="text/javascript" src="js/jquery.contextMenu.js"></script>
+<script type="text/javascript" src="js/jquery.ui.position.js"></script> -->
 
 <!-- <script language="javascript" type="text/javascript" src="../../js/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"/></script>
 <link rel="stylesheet" href="../../js/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" type="text/css"> -->
