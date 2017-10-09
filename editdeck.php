@@ -282,7 +282,7 @@ $tags = '';
 
 
 <div class="container-fluid">
-    <form id="questionEditForm" action="mydecks.php" method="post" >
+    <form id="slideEditForm" action="mydecks.php" method="post" >
     <input type="hidden" name="question_id" value="<?= $qid ?>" readonly>
     <input type="hidden" name="user_id" value="<?= $uid ?>" readonly>
     <input type="hidden" id ="ajaxkeepaliveurl" name="ajaxkeepaliveurl" value="<?php addSession('../ajax/keepalive.php')?>"  readonly>
@@ -306,7 +306,7 @@ $tags = '';
                      <div class="form-group">
                      <span class = "context-menu-one">HERE</span>
                      <label>Edit Slide Deck</label>
-                         <button class="editquesave btn btn-success" onclick="saveGenerate();" type="submit" name="save" value="save">Save</button>
+                         <button class="editquesave btn btn-success" type="submit" name="save" value="save">Save</button>
                          <a href='index.php' class="btn btn-warning" name="cancel"  formnovalidate>Cancel</a>
                          
                          <br/><br/>
@@ -331,7 +331,8 @@ $tags = '';
                             </div>
                          
                               <label>Slides</label>
-                            <div style="display: inline;" id="slides_edit" oncontextmenu="return false;"></div>
+                            <div class="slides_edit" id="slides_edit" oncontextmenu="return false;">
+                            </div>
                          
                      
                      </div>
@@ -452,7 +453,7 @@ $(document).ready(function () {
                 //console.debug('Editor contents was modified. Contents: ' + editor.getContent({
                     //format: 'text'
                 //}));
-                $('#questionEditForm').bootstrapValidator('revalidateField', 'question_text');
+                $('#slideEditForm').bootstrapValidator('revalidateField', 'question_text');
             });
             
              editor.on('init', function() {
@@ -553,7 +554,7 @@ $(document).ready(function () {
         });
         */
 
-    $('#questionEditForm')
+    $('#slideEditForm')
         .bootstrapValidator({
         excluded: [':disabled'],
         submitButtons: 'button[type="submit"]:not([formnovalidate])',
@@ -619,12 +620,8 @@ $(document).ready(function () {
  <div id='cntnr'>
     <ul id='items'>
       <li>+ Before</li>
-      <li>+ After</li>  
-    </ul>
-    <hr />
-    <ul id='items'>
-      <li>Move up</li>
-      <li>Move down</li>  
+      <li>+ After</li>
+      <li>Clone</li>  
     </ul>
     <hr />
     <ul id='items'>

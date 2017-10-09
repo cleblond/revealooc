@@ -40,3 +40,12 @@ li{
   background:#284570;
   border-radius:2px;
 }
+
+#slides_edit {
+		border-style : dashed;
+		display : inline-block;
+        -moz-transform: scale(0.3);
+        -webkit-transform: scale(0.3);
+        -ms-transform: scale(0.3);
+        transform-origin: left top;
+}

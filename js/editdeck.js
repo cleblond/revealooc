@@ -1,9 +1,78 @@
 var slides = new Array();
 
+var slides_num = 1;
+
+var edit_slide = 1;
+
+
+var newslidetmpl = '<div class="mceTmpl">' +
+                           '<h1 style="text-align: center;"><span style="font-size: 36pt;">BLANK SLIDE</span></h1>' +
+                           '<ul>' +
+                           '<li style="text-align: left;"><span style="font-size: 18pt;">Point 1</span></li>' +
+                           '<li style="text-align: left;"><span style="font-size: 18pt;">Point 2</span></li>' +
+                           '<li style="text-align: left;"><span style="font-size: 18pt;">Point 3</span></li>' +
+                           '</ul>' +
+                           '</div>';
+
+
 
 //document.addEventListener("DOMContentLoaded", function(){
 $(document).ready(function() {
   //var slides = new Array();
+  
+  
+
+  
+  
+  
+  
+  
+   $( ".slides_edit" ).sortable(
+        {
+            start: function(e, ui)
+            {
+               console.log('Helloe fork here');
+               console.log($(this).data());
+               
+               var items = $(this).data()['uiSortable'].items;
+                items.forEach(function(item) {
+                    item.height *= 0.3;
+                    item.width *= 0.3;
+                });
+            },
+               
+               
+               
+               
+            
+            sort: function(e, ui)
+            {
+            
+              //console.log(ui.position.top)
+                //var changeLeft = ui.position.left - ui.originalPosition.left;
+      // For left position, the problem here is not only the scaling,
+      // but the transform origin. Since the position is dynamic
+      // the left coordinate you get from ui.position is not the one
+      // used by transform origin. You need to adjust so that
+      // it stays "0", this way the transform will replace it properly
+              //var newLeft = ui.originalPosition.left + changeLeft / zoomScale - ui.item.parent().offset().left;
+
+      // For top, it's simpler. Since origin is top, 
+      // no need to adjust the offset. Simply undo the correction
+      // on the position that transform is doing so that
+      // it stays with the mouse position
+               var newTop = ui.position.top / 0.3 - 600;
+               ui.helper.css({
+                top: newTop
+                });
+            
+                       
+            }
+        });
+    //$( "#sortable" ).disableSelection();
+  
+  
+  
   
               parseSlidesTA();
          
@@ -24,14 +93,115 @@ $(document).ready(function() {
                         console.log($(this).text());
                         console.log(e.currentTarget);
                         
+                        
+                        //delete a slide
+                        
                         if ($(this).text() == 'Delete') {
                         
-                             e.currentTarget.remove();
-                             console.log(e.currentTarget.getAttribute("num"));
+                             /*
+                             console.log(e.currentTarget.getAttribute("num")-1);
+                             
+                             
+                             //slides = slides.remove(e.currentTarget.getAttribute("num")-1, 0);
+                             //delete slides['2'];
+                             
                              slides.splice(e.currentTarget.getAttribute("num")-1, 1);
-                             //deleteSlide();
-                             console.log(slides);
+                             
+                             for (i = parseInt(e.currentTarget.getAttribute("num")); i <= slides.length; i++) {
+                             
+                                
+                                var originy = (i) * -98;
+                                
+                               console.log(originy);
+		                        var fScaleAmount = 0.3;
+                                
+                                console.log($('div[num='+parseInt(i)+1+']'));
+                                
+                                $('div[num='+parseInt(i)+1+']').css({
+		                            "height" : "400px",
+		                            "width" : "500px",
+		                            "border-style" : "dashed",
+		                            "display" : "inline-block",
+                                    "-moz-transform": "scale(" + fScaleAmount + ")",
+                                    "-moz-transform-origin": "0% " + originy + "%",
+                                    "-webkit-transform": "scale(" + fScaleAmount + ")",
+                                    "-webkit-transform-origin": "0% " + originy + "%",
+                                    "-ms-transform": "scale(" + fScaleAmount + ")",
+                                    "-ms-transform-origin": "0% " + originy + "%",
+                                });
+                                
+                               
+                                
+                             }
+                             */
+                             
+                             
+
+                             e.currentTarget.remove();
+                             
+                             //console.log('slides after delete', slides);
                         }
+                        
+                        if ($(this).text() == '+ Before') {
+                        
+                                var oldslide = document.createElement('div');
+		
+                                oldslide.innerHTML = newslidetmpl;
+
+		                        oldslide.style.cursor = 'pointer';
+		                        oldslide.setAttribute("num",slides_num);
+		                        oldslide.setAttribute("class", "context-menu-one item ui-sortable-handle");
+                                $(oldslide).css({
+		                            "height" : "400px",
+		                            "width" : "500px",
+		                            "border-style" : "dashed",
+		                            "display" : "inline-block",
+                                   });
+                                                    
+                                
+                                
+                                e.currentTarget.before(oldslide);
+                                console.log('add slide before');
+                        
+                        } 
+                        
+                        
+                        if ($(this).text() == '+ After') {
+                        
+                                var oldslide = document.createElement('div');
+		
+                                oldslide.innerHTML = newslidetmpl;
+
+		                        oldslide.style.cursor = 'pointer';
+		                        oldslide.setAttribute("num",slides_num);
+		                        oldslide.setAttribute("class", "context-menu-one item ui-sortable-handle");
+                                $(oldslide).css({
+		                            "height" : "400px",
+		                            "width" : "500px",
+		                            "border-style" : "dashed",
+		                            "display" : "inline-block",
+                                   });
+                                                    
+                                
+                                
+                                e.currentTarget.after(oldslide);
+                                console.log('add slide before');
+                        
+                        } 
+                        
+                        
+                        
+                         if ($(this).text() == 'Clone') {
+                                console.log(e.currentTarget);            
+                                
+                                           
+                                e.currentTarget.after(e.currentTarget);
+                                console.log('clone');
+                        
+                        } 
+                        
+                        
+                        
                         
                 
                 });
@@ -41,6 +211,37 @@ $(document).ready(function() {
               
                 //alert( "Handler for .contextmenu() called." );
                 });
+                
+                
+                
+                
+                
+                   $( ".ui-sortable-handle" ).dblclick(function(e){
+                    
+                        $( ".ui-sortable-handle" ).css('border', "dashed"); 
+                    
+                        //save current slide
+                        console.log($(".ui-sortable-handle:eq("+(edit_slide-1)+")"));
+                        
+                        $(".ui-sortable-handle:eq("+(edit_slide-1)+")").html(tinyMCE.get('question_text').getContent());
+                        //console.log($("#slides_edit:nth-child(3)"))
+                        //console.log($('.ui-sortable-handle').index(this));
+                        
+                        
+                        console.log(e);
+                        console.log(e.currentTarget);
+                        //loadSlide(e.currentTarget.innerHTML)
+                        
+                        //update current
+                        $(e.currentTarget).css('border', "thick solid #0000FF");
+                        tinymce.activeEditor.setContent( e.currentTarget.innerHTML );
+                        edit_slide = $('.ui-sortable-handle').index(this) + 1; 
+  
+                    });
+                
+                
+                
+                
                 
                 
                 
@@ -82,6 +283,12 @@ $(document).ready(function() {
 
 
 
+
+
+
+
+
+
     function parseSlidesTA() {
               var xmlString = document.querySelector('#deckslidesta').value;
               parser = new DOMParser();
@@ -95,6 +302,8 @@ $(document).ready(function() {
                  createNumNode(i + 1);
                 //console.log(doc.body.children[i].innerHTML);
               }
+              
+              console.log('Slides read in', slides);
     }
     
     
@@ -112,8 +321,9 @@ $(document).ready(function() {
 
    /////////////////////////////////////////////////////reveal control
     
-	var slides_num = 1;
-	var edit_slide = false;
+
+	
+	
 	function loadSlide(slide) {
 //		CKEDITOR.instances["editor_kama"].setData( slides[slide] );
         
@@ -139,14 +349,7 @@ $(document).ready(function() {
 		//CKEDITOR.instances["editor_kama"].setData( '' );
 		
 		
-		var newslidetmpl = '<div class="mceTmpl">' +
-                           '<h1 style="text-align: center;"><span style="font-size: 36pt;">TITLE</span></h1>' +
-                           '<ul>' +
-                           '<li style="text-align: left;"><span style="font-size: 18pt;">Point 1</span></li>' +
-                           '<li style="text-align: left;"><span style="font-size: 18pt;">Point 2</span></li>' +
-                           '<li style="text-align: left;"><span style="font-size: 18pt;">Point 3</span></li>' +
-                           '</ul>' +
-                           '</div>';
+
 		
 		
 		
@@ -164,8 +367,8 @@ $(document).ready(function() {
 		} else {
 		    
 			slides[edit_slide] = tinyMCE.get('question_text').getContent();
-			console.log(tinyMCE.get('question_text').getContent());
-			console.log($("[num="+(edit_slide+1)+"]"));
+			//console.log(tinyMCE.get('question_text').getContent());
+			//console.log($("[num="+(edit_slide+1)+"]"));
 			$("[num="+(edit_slide+1)+"]").html(tinyMCE.get('question_text').getContent());
 		}
 		//CKEDITOR.instances["editor_kama"].setData( '' );		
@@ -173,7 +376,17 @@ $(document).ready(function() {
 	}
 	
 	
+	
+	
+
+	
+	
+	
+	
+	
     function createNumNode(slides_num) {
+    
+    
 		var oldslide = document.createElement('div');
 		
 		//oldslide.appendChild(document.createTextNode("Click to load Slide: "+slides_num));
@@ -183,29 +396,32 @@ $(document).ready(function() {
 
 		oldslide.style.cursor = 'pointer';
 		oldslide.setAttribute("num",slides_num);
-		oldslide.setAttribute("class", "context-menu-one");
+		oldslide.setAttribute("class", "context-menu-one item ui-sortable-handle");
+		/*
 		oldslide.onclick = function() {
 			loadSlide(parseInt(this.getAttribute("num"))-1);
 			 $(this).children("*").css('opacity', 1);
 			$('#slides_edit').children("*").css('border', "dashed");
 			this.style.border = "thick solid #0000FF";
 		};
-		
-		$maxWidth = $("#slides_edit").width();
+		*/
+		//$maxWidth = $("#slides_edit").width();
 		var originy = (slides_num - 1) * -98;
+		
 		var fScaleAmount = 0.3;
+		
+		
 		$(oldslide).css({
 		"height" : "400px",
 		"width" : "500px",
 		"border-style" : "dashed",
 		"display" : "inline-block",
-        "-moz-transform": "scale(" + fScaleAmount + ")",
-        "-moz-transform-origin": "0% " + originy + "%",
-        "-webkit-transform": "scale(" + fScaleAmount + ")",
-        "-webkit-transform-origin": "0% " + originy + "%",
-        "-ms-transform": "scale(" + fScaleAmount + ")",
-        "-ms-transform-origin": "0% " + originy + "%",
-
+        //"-moz-transform": "scale(" + fScaleAmount + ")",
+        //"-moz-transform-origin": "0% " + originy + "%",
+        //"-webkit-transform": "scale(" + fScaleAmount + ")",
+        //"-webkit-transform-origin": "0% " + originy + "%",
+        //"-ms-transform": "scale(" + fScaleAmount + ")",
+        //"-ms-transform-origin": "0% " + originy + "%",
        });
 				
 		document.querySelector('#slides_edit').appendChild(oldslide);
@@ -224,34 +440,96 @@ $(document).ready(function() {
 		document.querySelector('#slides_edit').appendChild(oldslide);
 	}
 	*/
-	function saveGenerate() {
-		var main_div = document.querySelector('#deckslides');
-		//var y = document.createElement('textarea');
-		var y = document.querySelector('#deckslidesta');
-		//y.id = 'mytextarea';
-		var d = document.createElement('div');
-		var m_title = document.querySelector('#deck_title').value;
-		var m_theme = document.querySelector('#themename').value;
-		var m_trans = document.querySelector('#transition').value;
-		d.appendChild(document.createTextNode("This is your generated code! Copy and paste it into a html page"));
-		var sections = ''
-		//y.value = 'just testing this';
-		//var completeCode = '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>'+m_title+'</title><meta name="apple-mobile-web-app-capable" content="yes" /><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /><link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reset.css"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/main.css"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/print.css" type="text/css" media="print"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/lib/css/zenburn.css"></head><body><div class="reveal"><div class="state-background"></div><div class="slides">';
-		for (i in slides) {
-		    console.log(i);
-			var section = '<section>';
-			section += slides[i];
+	
+	
+	$('#slideEditForm').submit(function() {
+    
+    
+    
+        var sections = ''
+	    $( "#slides_edit" ).children('div').each(function( index ) {
+	    
+            console.log("here");
+            console.log( index + ": " + $( this ).html() );
+            var section = '<section>';
+			section += $( this ).html();
 			section += '</section>';
 			//slides[i]
 			sections += section;
-		}
+        
+        });
+    
+    
+        var y = document.querySelector('#deckslidesta');
+		//y.id = 'mytextarea';
+		//var d = document.createElement('div');
+		var m_title = document.querySelector('#deck_title').value;
+		var m_theme = document.querySelector('#themename').value;
+		var m_trans = document.querySelector('#transition').value;
+		//d.appendChild(document.createTextNode("This is your generated code! Copy and paste it into a html page"));
+		//var sections = '';
+
+		y.value = sections;
+		console.log("saved sections",sections);
+    
+  
+    
+    return true; // return false to cancel form action
+    });
+	
+	
+	
+	
+	
+	
+	
+	function saveGenerate() {
+	
+	    var sections = ''
+	    $( "#slides_edit" ).children('div').each(function( index ) {
+	    
+            console.log("here");
+            console.log( index + ": " + $( this ).html() );
+            var section = '<section>';
+			section += $( this ).html();
+			section += '</section>';
+			//slides[i]
+			sections += section;
+        
+        });
+	
+	
+	
+	
+		//var main_div = document.querySelector('#deckslides');
+		//var y = document.createElement('textarea');
+		var y = document.querySelector('#deckslidesta');
+		//y.id = 'mytextarea';
+		//var d = document.createElement('div');
+		var m_title = document.querySelector('#deck_title').value;
+		var m_theme = document.querySelector('#themename').value;
+		var m_trans = document.querySelector('#transition').value;
+		//d.appendChild(document.createTextNode("This is your generated code! Copy and paste it into a html page"));
+		//var sections = ''
+		//y.value = 'just testing this';
+		//var completeCode = '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>'+m_title+'</title><meta name="apple-mobile-web-app-capable" content="yes" /><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /><link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reset.css"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/main.css"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/print.css" type="text/css" media="print"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/lib/css/zenburn.css"></head><body><div class="reveal"><div class="state-background"></div><div class="slides">';
+		
+		//console.log('SGslides saved', slides);
+		//for (i in slides) {
+		    //console.log(i);
+		//	var section = '<section>';
+		//	section += slides[i];
+		//	section += '</section>';
+			//slides[i]
+		//	sections += section;
+		//}
 		//completeCode += '</div><style type="text/css"> #kodyright { position: fixed; bottom: 10px; left: 10px; font-size: 12px; } </style><div id="kodyright">generated with <a target="_blank" href="http://kodkod.org">kodkod auto RevealJS generator</a></div><aside class="controls"><a class="left" href="#">&#x25C4;</a><a class="right" href="#">&#x25BA;</a><a class="up" href="#">&#x25B2;</a><a class="down" href="#">&#x25BC;</a></aside><div class="progress"><span></span></div></div><script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"><\/script>';
 		//completeCode += '<script> head.js( !document.body.classList ? "lib/js/classList.js" : null ).js( "http://lab.hakim.se/reveal-js/js/reveal.js", function() {  var query = {}; location.search.replace( /[A-Z0-9]+?=(\w*)/gi, function(a) { query[ a.split( "=" ).shift() ] = a.split( "=" ).pop(); } ); Reveal.initialize({ controls: true, progress: true, history: true, theme: query.theme || "'+m_theme+'", transition: query.transition || "'+m_trans+'" }); } ); head.js( "http://lab.hakim.se/reveal-js/lib/js/highlight.js", function() { hljs.initHighlightingOnLoad(); } ); <\/script></body></html>';
 		y.value = sections;
-		console.log(sections);
-		main_div.innerHTML = '';
-		main_div.appendChild(d);
-		main_div.appendChild(y);
+		console.log("SGsaved sections",sections);
+		//main_div.innerHTML = '';
+		//main_div.appendChild(d);
+		//main_div.appendChild(y);
 		//var main_ta = document.querySelector('#deckslidesta');
 		//main_ta.value = sections;
 		
