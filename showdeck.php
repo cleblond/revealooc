@@ -9,11 +9,6 @@ $p = $CFG->dbprefix;
 $displayname = $USER->displayname;
 
 
-
-
-///$id = 0;
-
-
 if (isset($_GET['slidedeck_id'])) {
 
 $id = intval($_GET['slidedeck_id']);
@@ -35,7 +30,7 @@ $options = json_decode($sliderow['options']);
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title><? echo $sliderow['description']; ?></title>
 
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/<?php echo $options->theme ?>.css">

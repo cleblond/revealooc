@@ -215,62 +215,6 @@ if (isset($_GET['slidedeck_id'])) {
         $options = new stdClass();
         $options->theme = 'black';
         $options->transition = 'slide';
-        
-        
-        //$question_options->ignore_case = 1;
-        //$ignore_case = "checked";
-        //$question_options->choose_template = '0';
-        
-        
-        /*
-        //Take care of requests from grouppage
-        if (isset($_GET['gid'])) {
-            $gid = intval($_GET['gid']);
-        } else {
-            $gid = '';
-        }
-        */
-        
-        
-        /*
-
-        //get current users home category
-        $getcatidsql = "SELECT category_id FROM {$p}eo_categories WHERE user_id = '".$USER->id."'";
-        $rowcatid = $PDOX->rowDie($getcatidsql);
-        //$cid = $rowcatid['category_id'];
-
-        $uid = $USER->id;
-        $title = "Create Slide";
-        
-        $text_response = '';
-		
-		///setup html for select category_id
-        $group_id_csv = $grp->user_groups($USER->id);
-
-        if ($group_id_csv) {
-            $getcatidsql = "SELECT category_id, parent_id, category_name, group_id FROM eo_categories WHERE user_id = ".$USER->id .  " OR group_id IN (".$group_id_csv.")";
-        } else {
-            $getcatidsql = "SELECT category_id, parent_id, category_name, group_id FROM eo_categories WHERE user_id = ".$USER->id ;
-        }
-        		
-        //$getcatidsql = "SELECT category_id, category_name FROM {$p}eo_categories WHERE user_id =" . $USER->id;
-        $rowcats = $PDOX->allRowsDie($getcatidsql);
-
-        $selhtml = '<div class="form-group">
-                    <label>Question Category&nbsp;&nbsp;</label><select class="custom-select" name="category_id">';
-            foreach ($rowcats as $cat) {
-            
-                if ($gid == $cat['group_id']) {
-                    $checked = "selected";
-                } else {
-                    $checked = "";
-                }
-                
-                $selhtml .= "<option value='".$cat['category_id']."' ".$checked.">".$cat['category_name']."</option>";
-            }
-        $selhtml .= '</select></div>';
-
-*/
 
 }
 
@@ -284,14 +228,7 @@ $tags = '';
 //echo("<h3>Edit Slide Deck</h3>");
 //$OUTPUT->welcomeUserCourse();
 
-
-
-
-
-
 ?>
-
-
 
 
 
