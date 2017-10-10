@@ -57,6 +57,13 @@ $options = 'options';
 $id = '';
 
 
+            $options = new StdClass;
+            //$question_options->choose_template = $_POST['choose_template'];
+            $options->theme = $_POST['themename'];
+            $options->transition = $_POST['transition'];
+
+
+
                 if (isset($_POST['share'])) {
                 $share = 1;
                 } else {
@@ -84,7 +91,7 @@ $id = '';
                     ':DES' => $_POST['deck_title'],
                     ':SLI' => $_POST['deckslidesta'],
                     ':SHA' => $share,
-                    ':OPT' => $options
+                    ':OPT' => JSON_encode($options)
                 ), true
             );
 
@@ -108,7 +115,7 @@ $id = '';
                     ':DES' => $_POST['deck_title'],
                     ':SLI' => $_POST['deckslidesta'],
                     ':SHA' => $share,
-                    ':OPT' => $options
+                    ':OPT' => JSON_encode($options)
                 ), true
             );
          
@@ -150,7 +157,7 @@ echo "<table class='table'>";
 foreach ($decks as $deck) {
      $share = ($deck['share'] == 0 ? 'No' : 'Yes');
     
-    echo "<tr><td>".$deck['description']. "</td><td>" . $deck['updated_at'] . "</td><td>" . $share . "</td><td><a href='editdeck.php?slidedeck_id=" . $deck['id'] . "'>Edit</a><a href='showdeck.php?slidedeck_id=" . $deck['id'] . "'>  View</a></td></tr>";
+    echo "<tr><td>".$deck['description']. "</td><td>" . $deck['updated_at'] . "</td><td>" . $share . "</td><td><a href='editdeck.php?slidedeck_id=" . $deck['id'] . "'>Edit</a><a target='_blank' href='showdeck.php?slidedeck_id=" . $deck['id'] . "'>  View</a></td></tr>";
 
 }
  echo "</table>";

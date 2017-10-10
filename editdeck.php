@@ -42,6 +42,14 @@ if (isset($_GET['slidedeck_id'])) {
 	    );
 
 
+
+        $options = json_decode($row['options']);
+
+
+
+
+
+
         /*
         //get csv of users groups
         $group_id_csv = $grp->user_groups($USER->id);
@@ -193,7 +201,7 @@ if (isset($_GET['slidedeck_id'])) {
 </div>';
         $decktitle = '';
         //$question_type = 'slide';
-        $slides = '';
+        $slides = '<section>' .$firstslide . '</section>';
         //$feedback = '';
         $slidedeck_id = '';
         //$difficulty = '0';
@@ -203,6 +211,12 @@ if (isset($_GET['slidedeck_id'])) {
         //$question_options = new stdClass();
         //$question_options->slide_bgcolor = '#000000';
         $slide_bgcolor = '#ffffff';
+        
+        $options = new stdClass();
+        $options->theme = 'black';
+        $options->transition = 'slide';
+        
+        
         //$question_options->ignore_case = 1;
         //$ignore_case = "checked";
         //$question_options->choose_template = '0';
@@ -314,19 +328,26 @@ $tags = '';
                          <label>Options</label>
                          <div id="themeselect">Theme:
                             <select name="themename" id="themename">
-                            <option value="default">default</option>
-                            <option value="neon">neon</option>
-                            <option value="beige">beige</option>
+                            <option value="black" <?php if ($options->theme == 'black') echo 'selected'; ?> >black</option>
+                            <option value="white" <?php if ($options->theme == 'white') echo 'selected'; ?> >white</option>
+                            <option value="league" <?php if ($options->theme == 'league') echo 'selected'; ?> >league</option>
+                            <option value="beige" <?php if ($options->theme == 'beige') echo 'selected'; ?> >beige</option>
+                            <option value="sky" <?php if ($options->theme == 'sky') echo 'selected'; ?> >sky</option>
+                            <option value="night" <?php if ($options->theme == 'night') echo 'selected'; ?> >night</option>
+                            <option value="serif" <?php if ($options->theme == 'serif') echo 'selected'; ?> >serif</option>
+                            <option value="simple" <?php if ($options->theme == 'simple') echo 'selected'; ?> >simple</option>
+                            <option value="solarized" <?php if ($options->theme == 'solarized') echo 'selected'; ?> >solarized</option>
                             </select>
                             </div>
                             <br/>
                             <div id="transelect">Transition:
                             <select name="transition" id="transition">
-                            <option value="default">default</option>
-                            <option value="cube">cube</option>
-                            <option value="page">page</option>
-                            <option value="concave">concave</option>
-                            <option value="linear">linear</option>
+                            <option value="none" <?php if ($options->transition == 'none') echo 'selected'; ?> >none</option>
+                            <option value="fade" <?php if ($options->transition == 'fade') echo 'selected'; ?> >fade</option>
+                            <option value="slide" <?php if ($options->transition == 'slide') echo 'selected'; ?> >slide</option>
+                            <option value="convex" <?php if ($options->transition == 'convex') echo 'selected'; ?> >convex</option>
+                            <option value="concave" <?php if ($options->transition == 'concave') echo 'selected'; ?> >concave</option>
+                            <option value="zoom" <?php if ($options->transition == 'zoom') echo 'selected'; ?> >zoom</option>
                             </select>
                             </div>
                          

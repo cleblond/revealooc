@@ -27,7 +27,7 @@ $sql = "SELECT * FROM {$p}eo_slidedecks WHERE id = $id";
 $sliderow = $PDOX->rowDie($sql);
 
 $deck = $sliderow['slides'];
-
+$options = json_decode($sliderow['options']);
 
 ?>
 <html>
@@ -38,7 +38,8 @@ $deck = $sliderow['slides'];
 		<title>reveal.js</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+		<link rel="stylesheet" href="css/theme/<?php echo $options->theme ?>.css">
+	    <link rel="stylesheet" href="css/custom.css">
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -67,7 +68,8 @@ $deck = $sliderow['slides'];
 			// - https://github.com/hakimel/reveal.js#configuration
 			// - https://github.com/hakimel/reveal.js#dependencies
 			Reveal.initialize({
-			    transition: 'convex',
+			    transition: "<?php echo $options->transition ?>",
+			    embedded: false,
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },

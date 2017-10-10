@@ -4,6 +4,8 @@ var slides_num = 1;
 
 var edit_slide = 1;
 
+var currenttarget = '';
+var currentindex = '';
 
 var newslidetmpl = '<div class="mceTmpl">' +
                            '<h1 style="text-align: center;"><span style="font-size: 36pt;">BLANK SLIDE</span></h1>' +
@@ -80,70 +82,57 @@ $(document).ready(function() {
               $('div[num="1"]').css('border', "thick solid #0000FF");
               
               
-              $( ".context-menu-one" ).contextmenu(function(e) {
-              e.preventDefault();
-                console.log(e);
-                $("#cntnr").css("left",e.pageX);
-                $("#cntnr").css("top",e.pageY);
- // $("#cntnr").hide(100);        
-                $("#cntnr").fadeIn(200,startFocusOut());      
               
               
-                $("#items > li").click(function(){
+              //context menue stuff
+              $(document).on('contextmenu', '.context-menu-one', function (e) {
+              //$( ".context-menu-one" ).contextmenu(function(e) {
+              
+                  console.log(this);
+                  
+                    e.preventDefault();
+                    console.log(e);
+                    $("#cntnr").css("left",e.pageX);
+                    $("#cntnr").css("top",e.pageY);
+     // $("#cntnr").hide(100);        
+                    $("#cntnr").fadeIn(200,startFocusOut());      
+                  
+                  
+                   currenttarget =  e.currentTarget;
+                   currentindex = $(e.currentTarget).index();
+                  
+                    
+                //return false;
+                  
+                    //alert( "Handler for .contextmenu() called." );
+            });
+            
+            
+             $("#items > li").click(function(){
                         console.log($(this).text());
-                        console.log(e.currentTarget);
-                        
+                        console.log(currenttarget);
+                        console.log("curindex", currentindex);
+                        console.log("edit_slide", edit_slide);
                         
                         //delete a slide
                         
-                        if ($(this).text() == 'Delete') {
-                        
-                             /*
-                             console.log(e.currentTarget.getAttribute("num")-1);
-                             
-                             
-                             //slides = slides.remove(e.currentTarget.getAttribute("num")-1, 0);
-                             //delete slides['2'];
-                             
-                             slides.splice(e.currentTarget.getAttribute("num")-1, 1);
-                             
-                             for (i = parseInt(e.currentTarget.getAttribute("num")); i <= slides.length; i++) {
-                             
-                                
-                                var originy = (i) * -98;
-                                
-                               console.log(originy);
-		                        var fScaleAmount = 0.3;
-                                
-                                console.log($('div[num='+parseInt(i)+1+']'));
-                                
-                                $('div[num='+parseInt(i)+1+']').css({
-		                            "height" : "400px",
-		                            "width" : "500px",
-		                            "border-style" : "dashed",
-		                            "display" : "inline-block",
-                                    "-moz-transform": "scale(" + fScaleAmount + ")",
-                                    "-moz-transform-origin": "0% " + originy + "%",
-                                    "-webkit-transform": "scale(" + fScaleAmount + ")",
-                                    "-webkit-transform-origin": "0% " + originy + "%",
-                                    "-ms-transform": "scale(" + fScaleAmount + ")",
-                                    "-ms-transform-origin": "0% " + originy + "%",
-                                });
-                                
-                               
-                                
-                             }
-                             */
-                             
-                             
+                        if ($(this).text() == 'Delete') {                             
 
-                             e.currentTarget.remove();
+                             currenttarget.remove();
                              
                              //console.log('slides after delete', slides);
                         }
                         
                         if ($(this).text() == '+ Before') {
                         
+                        
+                        
+                        
+                                if (currentindex + 1 <= edit_slide) {
+                                    edit_slide = edit_slide + 1;
+                                }
+                        
+                                console.log("edit_slide", edit_slide);
                                 var oldslide = document.createElement('div');
 		
                                 oldslide.innerHTML = newslidetmpl;
@@ -160,14 +149,19 @@ $(document).ready(function() {
                                                     
                                 
                                 
-                                e.currentTarget.before(oldslide);
+                                currenttarget.before(oldslide);
                                 console.log('add slide before');
                         
                         } 
-                        
                         
                         if ($(this).text() == '+ After') {
                         
+                        
+                                if (currentindex + 1 < edit_slide) {
+                                    edit_slide = edit_slide + 1;
+                                }
+                        
+                        
                                 var oldslide = document.createElement('div');
 		
                                 oldslide.innerHTML = newslidetmpl;
@@ -184,39 +178,42 @@ $(document).ready(function() {
                                                     
                                 
                                 
-                                e.currentTarget.after(oldslide);
+                                currenttarget.after(oldslide);
                                 console.log('add slide before');
                         
                         } 
                         
-                        
-                        
-                         if ($(this).text() == 'Clone') {
-                                console.log(e.currentTarget);            
+                        if ($(this).text() == 'Clone') {
+                                //console.log(e.currentTarget);            
+                                if (currentindex + 1 < edit_slide) {
+                                    edit_slide = edit_slide + 1;
+                                }
                                 
-                                           
-                                e.currentTarget.after(e.currentTarget);
-                                console.log('clone');
+                                //newcurrenttarget = currenttarget;           
+                                //currenttarget.after(newcurrenttarget);
+                                var copy = currenttarget.cloneNode(true);
+                                
+                                $(copy).css({
+		                            "height" : "400px",
+		                            "width" : "500px",
+		                            "border-style" : "dashed",
+		                            "display" : "inline-block",
+                                   });
+                                
+                                currenttarget.after(copy);
+                                
+                                
+                                //console.log('clone');
                         
                         } 
-                        
-                        
-                        
-                        
+                     
                 
                 });
-              
-              
-              
-              
-                //alert( "Handler for .contextmenu() called." );
-                });
-                
-                
-                
-                
-                
-                   $( ".ui-sortable-handle" ).dblclick(function(e){
+            
+
+                   $('#slides_edit').on('dblclick', ".ui-sortable-handle", function(e){
+                   
+                        
                     
                         $( ".ui-sortable-handle" ).css('border', "dashed"); 
                     
@@ -236,49 +233,10 @@ $(document).ready(function() {
                         $(e.currentTarget).css('border', "thick solid #0000FF");
                         tinymce.activeEditor.setContent( e.currentTarget.innerHTML );
                         edit_slide = $('.ui-sortable-handle').index(this) + 1; 
+                        
+                        document.getElementById('slidenumber').innerHTML = edit_slide;
   
                     });
-                
-                
-                
-                
-                
-                
-                
-              
-              
-
- //console.log(slides);
-  //console.log('HERE');
-//});
-
-
-// $(function() {
-        /*
-        console.log('HERE WE GO');
-        $.contextMenu({
-            selector: '.context-menu-one', 
-            callback: function(key, options) {
-                var m = "clicked: " + key;
-                window.console && console.log(m) || alert(m); 
-            },
-            items: {
-                "edit": {name: "Edit", icon: "edit"},
-                "cut": {name: "Cut", icon: "cut"},
-               copy: {name: "Copy", icon: "copy"},
-                "paste": {name: "Paste", icon: "paste"},
-                "delete": {name: "Delete", icon: "delete"},
-                "sep1": "---------",
-                "quit": {name: "Quit", icon: function(){
-                    return 'context-menu-icon context-menu-icon-quit';
-                }}
-            }
-        });
-
-        $('.context-menu-one').on('click', function(e){
-            console.log('clicked', this);
-        })
-       */  
 });
 
 
