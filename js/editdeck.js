@@ -220,17 +220,33 @@ $(document).ready(function() {
                         //save current slide
                         console.log($(".ui-sortable-handle:eq("+(edit_slide-1)+")"));
                         
-                        $(".ui-sortable-handle:eq("+(edit_slide-1)+")").html(tinyMCE.get('question_text').getContent());
+                        
+                        //var elements = $(tinyMCE.get('question_text').getContent());
+
+                        console.log(tinyMCE.get('question_text').getContent());
+                        //disable script tags
+                        var newtext = tinyMCE.get('question_text').getContent();
+                        //elements.find("script").attr("type","application/json");
+                        
+                        var finaltext = newtext.replace(/type=\"text\/javascript\"/g, 'type="application/json"');
+                        
+                        //$('script').elements.attr('type', 'application/json');
+                        //var  = elements.html();
+                        
+                        console.log(finaltext);
+                        $(".ui-sortable-handle:eq("+(edit_slide-1)+")").html(finaltext);
                         //console.log($("#slides_edit:nth-child(3)"))
                         //console.log($('.ui-sortable-handle').index(this));
                         
                         
-                        console.log(e);
-                        console.log(e.currentTarget);
+                        //console.log(e);
+                        //console.log(e.currentTarget);
                         //loadSlide(e.currentTarget.innerHTML)
                         
                         //update current
                         $(e.currentTarget).css('border', "thick solid #0000FF");
+                        
+                        
                         tinymce.activeEditor.setContent( e.currentTarget.innerHTML );
                         edit_slide = $('.ui-sortable-handle').index(this) + 1; 
                         
@@ -410,7 +426,12 @@ $(document).ready(function() {
             console.log("here");
             console.log( index + ": " + $( this ).html() );
             var section = '<section>';
-			section += $( this ).html();
+            
+            var newtext = $( this ).html();            
+            var finaltext = newtext.replace(/type=\"application\/json\"/g, 'type="text/javascript"');
+            
+            
+			section += finaltext;
 			section += '</section>';
 			//slides[i]
 			sections += section;
@@ -439,7 +460,7 @@ $(document).ready(function() {
 	
 	
 	
-	
+	/*
 	
 	function saveGenerate() {
 	
@@ -449,7 +470,13 @@ $(document).ready(function() {
             console.log("here");
             console.log( index + ": " + $( this ).html() );
             var section = '<section>';
-			section += $( this ).html();
+            var newtext = $( this ).html();            
+            var finaltext = newtext.replace(/type=\"application\/json\"/g, 'type="text/javascript"');
+
+            section += finaltext; 
+
+            //var finaltext = elements.html();
+			//section += $( this ).html();
 			section += '</section>';
 			//slides[i]
 			sections += section;
@@ -494,7 +521,7 @@ $(document).ready(function() {
 	}
 	
 	
-	
+	*/
 	
     
     

@@ -126,152 +126,89 @@ if (isset($_GET['action'])) {
 } 
 
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+//echo "<pre>".$_POST['deckslidesta'].'</pre>';
+
+$options = 'options';
+$id = '';
+
+
+            $options = new StdClass;
+            //$question_options->choose_template = $_POST['choose_template'];
+            $options->theme = $_POST['themename'];
+            $options->transition = $_POST['transition'];
 
 
 
-
-///handle post requests from editactivity.php for creating and editing activities
-if ( isset($_POST['questions'])) {
-    //echo $_POST['questions'];
-
-    //process completion options
-    if (isset($_POST['complete_by_flag'])) {
-    $complete_by_flag = 1;
-    $complete_by = $_POST['complete_by'];
-    } else {
-    $complete_by_flag = 0;
-    $complete_by = date("Y-m-d H:i:s"); 
-    }
-    
-    
-    if (isset($_POST['live'])) {
-    $live = 1;
-    //$complete_by = $_POST['complete_by'];
-    } else {
-    $live = 0;
-    //$complete_by = date("Y-m-d H:i:s"); 
-    }
-    
-       
-    if (isset($_POST['mode'])) {
-    $mode = $_POST['mode'];
-    } else {
-    $mode = 'live';
-    }
-    
-    
-    
-    
-   
-    if (isset($_POST['show_correct'])) {
-    $show_correct = 1;
-    } else {
-    $show_correct = 0;
-    }
-
-    if (isset($_POST['builds_on_last'])) {
-    $builds_on_last = 1;
-    } else {
-    $builds_on_last = 0;
-    }
-
-    if (isset($_POST['share'])) {
-    $share = 1;
-    } else {
-    $share = 0;
-    }
-    
-    if (isset($_POST['allow_rating'])) {
-    $allow_rating = 1;
-    } else {
-    $allow_rating = 0;
-    }
-
-    if (isset($_POST['max_tries']) AND $_POST['max_tries'] !== '' ) {
-    $max_tries = $_POST['max_tries'];
-    } else {
-    $max_tries = -1;
-    }
-
-    if (isset($_POST['grading'])) {
-    $grading = $_POST['grading'];
-    } else {
-    $grading = 0;
-    }
-    //echo $_POST['enable_limit_secs'];
-    if (isset($_POST['enable_limit_secs'])) {
-    $limit_secs = $_POST['limit_secs'] * 60;
-    } else {
-    $limit_secs = -1;
-    }
-
-    //echo $_POST['questions'];
-    
-    
-    
-                if ($acl->has_permissions('trusted', $USER->id)) {
-                    $clean_activity_info = $_POST['activity_info'];
-                    $clean_activity_title = $_POST['activity_title'];
+                if (isset($_POST['share'])) {
+                $share = 1;
                 } else {
-                    require_once 'htmlpurifier_library/HTMLPurifier.auto.php';
-                    $purifier = new HTMLPurifier();
-                    $clean_activity_info = $purifier->purify($_POST['activity_info']);
-                    $clean_activity_title = $purifier->purify($_POST['activity_title']);
+                $share = 0;
                 }
-    
-    
 
-    if ($_POST['activity_id'] == '') {
-      ///must be new activity
-    $savequery = "INSERT INTO {$p}eo_activities
-        (activity_id, activity_title, activity_info, link_id, user_id, share, max_tries, limit_secs, show_correct, builds_on_last, grading, mode, questions, points, complete_by_flag, complete_by, allow_rating, created_at, updated_at, live_status, live_qnum)
-        VALUES ( :QID, :ATI, :QIN, :LI, :UI, :SHA, :MAX, :LIM, :SHO, :BOL, :HIG, :MDE, :QUS, :POI, :CBF, :CBY, :RAT, NOW(), NOW(), :LIV, 1 )";
-        $link_id = $LINK->id;
-        
-        
-    } else {
-      //must be edit
-    $savequery = "INSERT INTO {$p}eo_activities
-        (activity_id, activity_title, activity_info, link_id, user_id, share, max_tries, limit_secs, show_correct, builds_on_last, grading, mode, questions, points, complete_by_flag, complete_by, allow_rating, created_at, updated_at, live_status, live_qnum)
-        VALUES ( :QID, :ATI, :QIN, :LI, :UI, :SHA, :MAX, :LIM, :SHO, :BOL, :HIG, :MDE, :QUS, :POI, :CBF, :CBY, :RAT, NOW(), NOW(), 'waiting', 1)
-        ON DUPLICATE KEY UPDATE activity_id=:QID, activity_title=:ATI, activity_info=:QIN, link_id=:LI, user_id=:UI, share=:SHA, max_tries=:MAX, limit_secs=:LIM, show_correct=:SHO, builds_on_last = :BOL, grading=:HIG, mode=:MDE, questions=:QUS, points=:POI, complete_by_flag=:CBF, complete_by=:CBY, allow_rating=:RAT, updated_at = NOW(), live_status = :LIV, live_qnum = 1";
-         $link_id = $_POST['link_id'];
-    }
-    //echo $_POST['questions'];
-    $PDOX->queryDie($savequery,
-        array(
-            ':LI' => $link_id,
-            ':UI' => $USER->id,
-            ':QID' => intval($_POST["activity_id"]),
-            ':QIN' => $clean_activity_info,
-            ':ATI' => $clean_activity_title,
-            ':MAX' => $max_tries,
-            ':HIG' => $grading,
-            ':LIM' => $limit_secs,
-            ':MDE' => $mode,
-            ':QUS' => $_POST["questions"],
-            ':POI' => $_POST["q_points"],
-            ':RAT' => $allow_rating,
-            ':CBF' => $complete_by_flag,
-            ':CBY' => $complete_by,
-            ':SHA' => $share,
-            ':SHO' => $show_correct,
-            ':BOL' => $builds_on_last,
-            ':LIV' => 'waiting'
-        ), true
-    );
-    
-        $activity_id = $PDOX->lastInsertId();
-    
-            //notify followers
-        if ($share == 1) {
-        
-        $notif->notify_followers($USER->id, $activity_id, 'newactivity');
-        //notify_followers($USER->id, $activity_id, 'newactivity');
-        }
+
+
+         if ($_POST['slidedeck_id'] == '') {  //
+         
+         
+
+         
+         
+                 $savequery = "INSERT INTO {$p}eo_slidedecks
+                (user_id, description, slides, share, options, updated_at)
+                VALUES ( :UI, :DES, :SLI, :SHA, :OPT, NOW())";
+                // $link_id = $_POST['link_id'];
+            
+            //echo $_POST['questions'];
+            $PDOX->queryDie($savequery,
+                array(
+                    ':UI' => $USER->id,
+                  //  ':ID' => $id,
+                    ':DES' => $_POST['deck_title'],
+                    ':SLI' => $_POST['deckslidesta'],
+                    ':SHA' => $share,
+                    ':OPT' => JSON_encode($options)
+                ), true
+            );
+
+         
+         
+         
+         
+         } else {
+         
+                $savequery = "INSERT INTO {$p}eo_slidedecks
+                (id, user_id, description, slides, share, options, updated_at)
+                VALUES ( :ID, :UI, :DES, :SLI, :SHA, :OPT, NOW())
+                ON DUPLICATE KEY UPDATE user_id = :UI, description = :DES, slides = :SLI, share = :SHA, options = :OPT, updated_at = NOW()";
+            $id =  $_POST['slidedeck_id'];
+            
+            //echo $_POST['questions'];
+            $PDOX->queryDie($savequery,
+                array(
+                    ':UI' => $USER->id,
+                    ':ID' => $id,
+                    ':DES' => $_POST['deck_title'],
+                    ':SLI' => $_POST['deckslidesta'],
+                    ':SHA' => $share,
+                    ':OPT' => JSON_encode($options)
+                ), true
+            );
+         
+         
+         
+         }  // endif question_id
+
+ 
+
+
+
+
+
+
 
 }
-
 
 
 

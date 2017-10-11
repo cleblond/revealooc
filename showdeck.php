@@ -64,7 +64,7 @@ $options = json_decode($sliderow['options']);
 			// - https://github.com/hakimel/reveal.js#dependencies
 			Reveal.initialize({
 			    transition: "<?php echo $options->transition ?>",
-			    embedded: false,
+			    embedded: true,
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },

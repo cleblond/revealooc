@@ -68,7 +68,7 @@
                     
                     <td ng-if="myonly == '1'" ng-cloak>{{data.share == "1" | iif : "Yes" : "No"}}</td>
                     <td><small>{{data.updated_at}}</small></td>
-                    <td><a href='showdeck.php?slidedeck_id={{data.id}}' title="Preview"><i class='fa fa-search' aria-hidden='true'></i></a></td>
+                    <td><a href='showdeck.php?slidedeck_id={{data.id}}' title="Preview"><i class="fa fa-search" aria-hidden="true"></i></a></td>
                <!--     <td><a href='activityintro.php?activity_id={{data.activity_id}}' title='Attempt Activity'><i class='fa fa-search' aria-hidden='true'></i></a></td> -->
                     
 
@@ -77,14 +77,12 @@
                     <td ng-if="data.user_id !== USERID"></td><td ng-if="data.user_id !== USERID"></td><td ng-if="data.user_id !== USERID"></td>
                     
                     
-                    <td ng-if="data.user_id == USERID"><a href='editdeck.php?activity_id={{data.activity_id}}' title='Edit Slide Deck (If your allowed.)'><i class='fa fa-cog' aria-hidden='true'></i></a></td>
+                    <td ng-if="data.user_id == USERID"><a href='editdeck.php?slidedeck_id={{data.id}}' title='Edit Slide Deck (If your allowed.)'><i class='fa fa-cog' aria-hidden='true'></i></a></td>
                     
                     <td><a href='myactivities.php?activity_id={{data.activity_id}}&action=copy' title="Duplicate/Copy"><i class='fa fa-clone' aria-hidden='true'></i></a></td>
                     
                     
-                    <td ng-if="data.user_id == USERID"><a ng-click="confirmDelete($event)" class='deleteactivity' href='myactivities.php?action=delete&activity_id={{data.activity_id}}' title='Delete Activity'><i class='fa fa-times' ariwindow.location.href set tsugi_element_id_8126be49 height=912
-tsugiscripts.js:52lti_frameResize delta 6 is too small, ignored
-tsugiscripts.js:78 sending {"subject":"lti.frameResize","height":918,"ela-hidden='true'></i></a></td>
+                    <td ng-if="data.user_id == USERID"><a ng-click="confirmDelete($event)" class='deleteactivity' href='mydecks.php?action=delete&slidedeck_id={{data.id}}' title='Delete SlideDeck'><i class="fa fa-times"></i></a></td>
                  <!--   <td><a href="previewquestion.php?question_id={{data.question_id}}" target="_blank">Pre</a></td>
                     <td><a href="editquestion.php?question_id={{data.question_id}}">Edit</a></td> -->
                 </tr>
