@@ -105,7 +105,7 @@ $row = $PDOX->rowDie("SELECT * FROM {$p}eo_slidedecks WHERE id=".$slidedeck_id);
 
 
 
-
+/*
 if ( !$USER->instructor ) {
 
     if (!$assignedrow) {
@@ -114,6 +114,7 @@ if ( !$USER->instructor ) {
         header('Location: '.addSession('showdeck.php?slidedeck_id='.$assignedrow['slidedeck_id']));
     }
 }
+*/
 
 // Start of the output
 $OUTPUT->header();
@@ -122,9 +123,10 @@ $OUTPUT->flashMessages();
 
 echo "<legend>Assigned SlideDeck</legend>";
 
-echo '<div class="container-fluid"><a href="mydecks.php" class="btn btn-info" >My SlideDecks</a></div><br/>';
-
-        echo('<div class="well">');
+if ( $USER->instructor ) {
+    echo '<div class="container-fluid"><a href="mydecks.php" class="btn btn-info" >My SlideDecks</a></div><br/>';
+}
+echo('<div class="well">');
 
 if(!$assignedrow) {
         echo ('<p>There is no SlideDeck assigned for this link!  Click on <a href="mydecks.php">"My Decks"</a> to create and assign SlideDecks!</p>');
@@ -133,13 +135,17 @@ if(!$assignedrow) {
         echo('</div></div>');
 } else {
 
-        echo '<h4>' . $row['description'] . '</h4>
-        <p><a href="index.php?action=unassign&slidedeck_id='.$assignedrow['slidedeck_id'].'" title="Unassign"><i class="fa fa-check-square-o fa-3x" aria-hidden="true"></i></a>&nbsp;&nbsp;
+        echo '<h4>' . $row['description'] . '</h4><span>Last updated ' . $row['updated_at'] . '</span></br>';
+        if ( $USER->instructor ) {
+        echo '<p><a href="index.php?action=unassign&slidedeck_id='.$assignedrow['slidedeck_id'].'" title="Unassign"><i class="fa fa-check-square-o fa-3x" aria-hidden="true"></i></a>&nbsp;&nbsp;
         <a href="editdeck.php?slidedeck_id='.$assignedrow['slidedeck_id']. 
-        '" title="Edit"><i class="fa fa-cog fa-3x" aria-hidden="true"></i></a>&nbsp;&nbsp;
-        <a href="showdeck.php?slidedeck_id='.$assignedrow['slidedeck_id']. 
-        '" title="Preview"><i class="fa fa-search fa-3x" aria-hidden="true"></i></a></p>
-        </div></div>';
+        '" title="Edit"><i class="fa fa-cog fa-3x" aria-hidden="true"></i></a>&nbsp;&nbsp;';
+        }
+        
+        echo '<a href="showdeck.php?slidedeck_id='.$assignedrow['slidedeck_id']. 
+        '" title="Preview"><i class="fa fa-search fa-3x" aria-hidden="true"></i></a></p>';
+        
+        echo '</div></div>';
 
 }
 /////////////////////////
