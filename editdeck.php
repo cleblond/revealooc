@@ -140,6 +140,11 @@ if (isset($_GET['slidedeck_id'])) {
 	            $slide_options = json_decode($row['options']);
 	            $slides =  $row['slides'];
 	            
+	            //var_dump($slides);
+	            
+	            $slides = str_replace("text\/javascript","application\/json",$slides);
+	            echo '<pre>'.$slides.'</pre>';
+	            
 	            //get first section /slide
 	            
 	            $first = strstr($slides, '<section>');

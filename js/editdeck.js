@@ -437,7 +437,7 @@ $(document).ready(function() {
 			sections += section;
         
         });
-    
+        
     
         var y = document.querySelector('#deckslidesta');
 		//y.id = 'mytextarea';

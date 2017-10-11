@@ -23,7 +23,7 @@ $sliderow = $PDOX->rowDie($sql);
 
 $deck = $sliderow['slides'];
 $options = json_decode($sliderow['options']);
-
+$OUTPUT->header();
 ?>
 <html>
 	<head>

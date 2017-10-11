@@ -225,7 +225,7 @@ if ( ! $USER->instructor ) die();   ///Die if not instructor role (maybe move ev
 
 echo "<legend>My SlideDecks</legend>";
 
-echo '<div class="container-fluid"><a href="editdeck.php" class="btn btn-success" >New SlideDeck</a>  <a href="slidedecks.php" class="btn btn-info" >SlideDeck Bank</a></div>';
+echo '<div class="container-fluid"><a href="editdeck.php" class="btn btn-success" >New SlideDeck</a>  <!-- <a href="slidedecks.php" class="btn btn-info" >SlideDeck Bank</a>--></div>';
 
 $myonly = 1;
 require_once "mydecksangular.php";
