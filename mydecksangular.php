@@ -48,7 +48,7 @@
     <br/>
     <div class="row">
         <div class="col-md-12" ng-show="filteredItems > 0">
-            <table border ="1" id="tab2" data-escape="true" class="table table-striped table-hover table-condensed table-responsive">
+            <table id="tab2" data-escape="true" class="table table-striped table-hover table-condensed table-responsive">
             <thead>
         <!--    <th>Question Id<a ng-click="sort_by('question_id');"><i class="glyphicon glyphicon-sort"></i></a></th> -->
             <th>Description&nbsp;<a ng-click="sort_by('description');"><i class="glyphicon glyphicon-sort"></i></a></th>
@@ -72,7 +72,7 @@
                <!--     <td><a href='activityintro.php?activity_id={{data.activity_id}}' title='Attempt Activity'><i class='fa fa-search' aria-hidden='true'></i></a></td> -->
                     
 
-                    <td ng-if="data.user_id == USERID"><a href='index.php?activity_id={{data.id}}&action=assign' title="Assign This Activity!"><i class='fa fa-check-square-o' aria-hidden='true'></i></a></td>
+                    <td ng-if="data.user_id == USERID"><a href='index.php?slidedeck_id={{data.id}}&action=assign' title="Assign This SlideDeck!"><i class='fa fa-check-square-o' aria-hidden='true'></i></a></td>
 
                     <td ng-if="data.user_id !== USERID"></td><td ng-if="data.user_id !== USERID"></td><td ng-if="data.user_id !== USERID"></td>
                     

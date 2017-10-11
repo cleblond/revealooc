@@ -231,7 +231,7 @@ $tags = '';
 ?>
 
 
-
+<legend>Edit/Create Slide Deck</legend>
 <div class="container-fluid">
     <form id="slideEditForm" action="mydecks.php" method="post" >
     <input type="hidden" name="question_id" value="<?= $qid ?>" readonly>
@@ -255,7 +255,6 @@ $tags = '';
             <div class="row">
                  <div class="col-md-2">
                      <div class="form-group">
-                     <span class = "context-menu-one">HERE</span>
                      <label>Edit Slide Deck</label>
                          <button class="editquesave btn btn-success" type="submit" name="save" value="save">Save</button>
                          <a href='index.php' class="btn btn-warning" name="cancel"  formnovalidate>Cancel</a>
@@ -289,7 +288,7 @@ $tags = '';
                             </div>
                          
                               <label>Slides</label>
-                            <div class="slides_edit" id="slides_edit" oncontextmenu="return false;">
+                            <div title="Right Click to Add Slide, double click to edit!" class="slides_edit" id="slides_edit" oncontextmenu="return false;">
                             </div>
                          
                      
@@ -303,21 +302,6 @@ $tags = '';
                         <label for="deck_title">Deck Title</label>
                         <input placeholder="Provide a title for this slide deck" type="text" class="form-control" name="deck_title" id="deck_title" value="<?= $decktitle ?>">
                         </div>
-                        
-                        
-                            
-                        
-                        
-                        
-                        
-                        
-                        <!-- Question specific options  -->
-
-
-
-
-
-                        
                         
                         <div class="form-group">
                             <label for="question_text">Slide Content</label><div id="slidenum">Editing Slide: <span id="slidenumber">1</span></div>
