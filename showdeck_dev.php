@@ -21,7 +21,23 @@ die;
 $sql = "SELECT * FROM {$p}eo_slidedecks WHERE id = $id";
 $sliderow = $PDOX->rowDie($sql);
 
-$deck = $sliderow['slides'];
+
+$slides = json_decode($sliderow['slides']);
+
+$sections = '';
+$section = ''; 
+    foreach ($slides  as $slide) {            
+        $slide = str_replace("text\/javascript","application\/json", $slide);
+        $section .= "<section>" . $slide . "</section>";
+                    
+                
+        //$slidestext = $slidetext . ;
+        $sections .= $section;
+        $section = '';
+    }
+
+
+
 $options = json_decode($sliderow['options']);
 $OUTPUT->header();
 ?>
@@ -51,7 +67,7 @@ $OUTPUT->header();
 	<body>
 		<div class="reveal">
 			<div class="slides">
-<?= $deck ?>
+<?= $sections ?>
 			</div>
 		</div>
 
@@ -85,6 +101,31 @@ $OUTPUT->header();
 		</script>
 		
 		<script type="text/javascript">
+		
+		   Reveal.addEventListener( 'ready', function( event ) {
+	                // event.currentSlide, event.indexh, event.indexv
+	                console.log("cur slide", event.currentSlide); 
+	                
+           } );
+           
+           
+           Reveal.addEventListener( 'slidechanged', function( event ) {
+           
+                console.log("cur slide", event.currentSlide);
+                var qdiv = event.currentSlide.querySelector('.questiondiv');
+                
+                console.log(qdiv.dataset.qid);
+                console.log(qdiv.dataset.aid);
+                
+                
+                console.log(event.indexh);
+	            // event.previousSlide, event.currentSlide, event.indexh, event.indexv
+            } );
+           
+           
+		
+		
+		
             Reveal.addEventListener( 'myslide1', function() {
 
                if(!window.myCanvas){

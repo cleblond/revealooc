@@ -50,19 +50,7 @@ $(document).ready(function() {
             sort: function(e, ui)
             {
             
-              //console.log(ui.position.top)
-                //var changeLeft = ui.position.left - ui.originalPosition.left;
-      // For left position, the problem here is not only the scaling,
-      // but the transform origin. Since the position is dynamic
-      // the left coordinate you get from ui.position is not the one
-      // used by transform origin. You need to adjust so that
-      // it stays "0", this way the transform will replace it properly
-              //var newLeft = ui.originalPosition.left + changeLeft / zoomScale - ui.item.parent().offset().left;
 
-      // For top, it's simpler. Since origin is top, 
-      // no need to adjust the offset. Simply undo the correction
-      // on the position that transform is doing so that
-      // it stays with the mouse position
                var newTop = ui.position.top / 0.3 - 600;
                ui.helper.css({
                 top: newTop
@@ -257,18 +245,12 @@ $(document).ready(function() {
 
 
 
-
-
-
-
-
-
     function parseSlidesTA() {
               var xmlString = document.querySelector('#deckslidesta').value;
               parser = new DOMParser();
               doc = parser.parseFromString(xmlString, "text/html");
               
-              //console.log(doc.body.children);
+              console.log(doc.body.children);
               
               for (var i = 0; i < doc.body.children.length; i++) {
               
@@ -280,10 +262,6 @@ $(document).ready(function() {
               console.log('Slides read in', slides);
     }
     
-    
-   
-          
-
 
     //context menu
     function startFocusOut(){
@@ -293,25 +271,7 @@ $(document).ready(function() {
       });
     }
 
-   /////////////////////////////////////////////////////reveal control
-    
-
 	
-	
-	function loadSlide(slide) {
-//		CKEDITOR.instances["editor_kama"].setData( slides[slide] );
-        
-        saveSlide();
-		tinymce.activeEditor.setContent( slides[slide] );
-		document.getElementById('slidenumber').innerHTML = slide+1;
-        //save current changes to slide
-		
-		
-		
-		edit_slide = slide;
-		
-		
-	}
 	function saveNext() {
 		if (!edit_slide) {
 			slides.push(tinyMCE.get('question_text').getContent());
@@ -320,12 +280,6 @@ $(document).ready(function() {
 		} else {
 			slides[edit_slide] = tinyMCE.get('question_text').getContent();
 		}
-		//CKEDITOR.instances["editor_kama"].setData( '' );
-		
-		
-
-		
-		
 		
         tinymce.activeEditor.setContent( newslidetmpl );
         //get('question_text')
@@ -349,14 +303,7 @@ $(document).ready(function() {
 		
 	}
 	
-	
-	
-	
 
-	
-	
-	
-	
 	
     function createNumNode(slides_num) {
     
@@ -401,28 +348,16 @@ $(document).ready(function() {
 		document.querySelector('#slides_edit').appendChild(oldslide);
 	}
 	
-	/*
-	function createNumNode(slides_num) {
-		var oldslide = document.createElement('div');
-		oldslide.appendChild(document.createTextNode("Click to load Slide: "+slides_num));
-		oldslide.style.cursor = 'pointer';
-		oldslide.setAttribute("num",slides_num);
-		oldslide.onclick = function() {
-			loadSlide(parseInt(this.getAttribute("num"))-1);
-		};
-		
-		document.querySelector('#slides_edit').appendChild(oldslide);
-	}
-	*/
 	
 	
 	$('#slideEditForm').submit(function() {
-    
-    
-    
+
         var sections = ''
+        i=0;
 	    $( "#slides_edit" ).children('div').each(function( index ) {
 	    
+	        slides[i] = $( this ).html();
+	        slides[i] = slides[i].replace(/type=\"application\/json\"/g, 'type="text/javascript"');
             console.log("here");
             console.log( index + ": " + $( this ).html() );
             var section = '<section>';
@@ -435,20 +370,17 @@ $(document).ready(function() {
 			section += '</section>';
 			//slides[i]
 			sections += section;
-        
+        i++;
         });
-        
-    
+
         var y = document.querySelector('#deckslidesta');
-		//y.id = 'mytextarea';
-		//var d = document.createElement('div');
 		var m_title = document.querySelector('#deck_title').value;
 		var m_theme = document.querySelector('#themename').value;
 		var m_trans = document.querySelector('#transition').value;
 		//d.appendChild(document.createTextNode("This is your generated code! Copy and paste it into a html page"));
 		//var sections = '';
 
-		y.value = sections;
+		y.value = JSON.stringify(slides);
 		console.log("saved sections",sections);
     
   
@@ -457,77 +389,4 @@ $(document).ready(function() {
     });
 	
 	
-	
-	
-	
-	/*
-	
-	function saveGenerate() {
-	
-	    var sections = ''
-	    $( "#slides_edit" ).children('div').each(function( index ) {
-	    
-            console.log("here");
-            console.log( index + ": " + $( this ).html() );
-            var section = '<section>';
-            var newtext = $( this ).html();            
-            var finaltext = newtext.replace(/type=\"application\/json\"/g, 'type="text/javascript"');
 
-            section += finaltext; 
-
-            //var finaltext = elements.html();
-			//section += $( this ).html();
-			section += '</section>';
-			//slides[i]
-			sections += section;
-        
-        });
-	
-	
-	
-	
-		//var main_div = document.querySelector('#deckslides');
-		//var y = document.createElement('textarea');
-		var y = document.querySelector('#deckslidesta');
-		//y.id = 'mytextarea';
-		//var d = document.createElement('div');
-		var m_title = document.querySelector('#deck_title').value;
-		var m_theme = document.querySelector('#themename').value;
-		var m_trans = document.querySelector('#transition').value;
-		//d.appendChild(document.createTextNode("This is your generated code! Copy and paste it into a html page"));
-		//var sections = ''
-		//y.value = 'just testing this';
-		//var completeCode = '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>'+m_title+'</title><meta name="apple-mobile-web-app-capable" content="yes" /><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /><link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/reset.css"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/main.css"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/css/print.css" type="text/css" media="print"><link rel="stylesheet" href="http://lab.hakim.se/reveal-js/lib/css/zenburn.css"></head><body><div class="reveal"><div class="state-background"></div><div class="slides">';
-		
-		//console.log('SGslides saved', slides);
-		//for (i in slides) {
-		    //console.log(i);
-		//	var section = '<section>';
-		//	section += slides[i];
-		//	section += '</section>';
-			//slides[i]
-		//	sections += section;
-		//}
-		//completeCode += '</div><style type="text/css"> #kodyright { position: fixed; bottom: 10px; left: 10px; font-size: 12px; } </style><div id="kodyright">generated with <a target="_blank" href="http://kodkod.org">kodkod auto RevealJS generator</a></div><aside class="controls"><a class="left" href="#">&#x25C4;</a><a class="right" href="#">&#x25BA;</a><a class="up" href="#">&#x25B2;</a><a class="down" href="#">&#x25BC;</a></aside><div class="progress"><span></span></div></div><script src="http://lab.hakim.se/reveal-js/lib/js/head.min.js"><\/script>';
-		//completeCode += '<script> head.js( !document.body.classList ? "lib/js/classList.js" : null ).js( "http://lab.hakim.se/reveal-js/js/reveal.js", function() {  var query = {}; location.search.replace( /[A-Z0-9]+?=(\w*)/gi, function(a) { query[ a.split( "=" ).shift() ] = a.split( "=" ).pop(); } ); Reveal.initialize({ controls: true, progress: true, history: true, theme: query.theme || "'+m_theme+'", transition: query.transition || "'+m_trans+'" }); } ); head.js( "http://lab.hakim.se/reveal-js/lib/js/highlight.js", function() { hljs.initHighlightingOnLoad(); } ); <\/script></body></html>';
-		y.value = sections;
-		console.log("SGsaved sections",sections);
-		//main_div.innerHTML = '';
-		//main_div.appendChild(d);
-		//main_div.appendChild(y);
-		//var main_ta = document.querySelector('#deckslidesta');
-		//main_ta.value = sections;
-		
-	}
-	
-	
-	*/
-	
-    
-    
-    
-    
-    
-    
-    
-    //reveal controls

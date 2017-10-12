@@ -21,7 +21,22 @@ die;
 $sql = "SELECT * FROM {$p}eo_slidedecks WHERE id = $id";
 $sliderow = $PDOX->rowDie($sql);
 
-$deck = $sliderow['slides'];
+$slides = json_decode($sliderow['slides']);
+
+$sections = '';
+$section = ''; 
+    foreach ($slides  as $slide) {            
+        $slide = str_replace("text\/javascript","application\/json", $slide);
+        $section .= "<section>" . $slide . "</section>";
+                    
+                
+        //$slidestext = $slidetext . ;
+        $sections .= $section;
+        $section = '';
+    }
+
+
+
 $options = json_decode($sliderow['options']);
 $OUTPUT->header();
 ?>
@@ -51,7 +66,7 @@ $OUTPUT->header();
 	<body>
 		<div class="reveal">
 			<div class="slides">
-<?= $deck ?>
+<?= $sections ?>
 			</div>
 		</div>
 
@@ -85,5 +100,3 @@ $OUTPUT->header();
 $OUTPUT->footerStart();
 
 $OUTPUT->footerEnd();
-
-

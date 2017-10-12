@@ -138,22 +138,56 @@ if (isset($_GET['slidedeck_id'])) {
 	            if ($row){
 	            
 	            $slide_options = json_decode($row['options']);
-	            $slides =  $row['slides'];
+	            
+	            $slides =  json_decode($row['slides']);
+	            
 	            
 	            //var_dump($slides);
 	            
-	            $slides = str_replace("text\/javascript","application\/json",$slides);
-	            echo '<pre>'.$slides.'</pre>';
+	            //$slides = str_replace("text\/javascript","application\/json",$slides);
+	            $firstslide = str_replace("text\/javascript","application\/json", $slides[0]);
+	            
+	            
+	            //$dom = new DOMDocument();
+	            //libxml_use_internal_errors(true);
+                //$doc = $dom->loadHTML($slides);
+                //libxml_clear_errors();
+                
+                //$sections = $dom->getElementsByTagName('section');
+                
+                
+                //$slidestext = '';
+                $sections = '';
+                $section = ''; 
+                foreach ($slides  as $slide) {
+                
+                    $slide = str_replace("text\/javascript","application\/json", $slide);
+                    $section .= "<section>" . $slide . "</section>";
+                    
+                
+                    //$slidestext = $slidetext . ;
+                    $sections .= $section;
+                    $section = '';
+                }
+                
+                //print_r($sections);
+	            
+	            
+	            
+	            //$slides = str_replace("text\/javascript","application\/json",$slides);
+	            ///echo '<pre>'.$slides.'</pre>';
 	            
 	            //get first section /slide
 	            
-	            $first = strstr($slides, '<section>');
-	            $second = strstr($first, '</section>');
-	            $firstslide = str_replace($second, "", $first);
+	            //$first = strstr($slides, '<section>');
+	            //$first = strstr($slides, '<sec');
+	            //$second = strstr($first, '</section>');
+	            
+	            //$firstslide = str_replace($second, "", $first);
 	            
 	            
-	            $firstslide =  str_replace("<section>","", $firstslide);
-	            $firstslide =  str_replace("</section>","", $firstslide);
+	            //$firstslide =  str_replace("<section>","", $firstslide);
+	            //$firstslide =  str_replace("</section>","", $firstslide);
 	            //$firstslide =  str_replace($firstslide,"</section>","");
 	            //$firstslide = ltrim($firstslide, '<section>');
 	            //echo "<pre>".$firstslide."</pre>";
@@ -193,7 +227,7 @@ if (isset($_GET['slidedeck_id'])) {
 
 
 } else {
-    //Must be new slide
+    //Must be new slide deck
 
         $firstslide = '
 <div class="mceTmpl">
@@ -206,7 +240,7 @@ if (isset($_GET['slidedeck_id'])) {
 </div>';
         $decktitle = '';
         //$question_type = 'slide';
-        $slides = '<section>' .$firstslide . '</section>';
+        $sections = '<section>' .$firstslide . '</section>';
         //$feedback = '';
         $slidedeck_id = '';
         //$difficulty = '0';
@@ -348,7 +382,7 @@ $tags = '';
 
 
 <!-- <div id="deckslides">   </div> -->
-<textarea name="deckslidesta" id="deckslidesta"><?= $slides ?></textarea>
+<textarea name="deckslidesta" id="deckslidesta"><?= $sections ?></textarea>
 
 
 
