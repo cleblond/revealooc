@@ -66,6 +66,7 @@ $OUTPUT->header();
 	</head>
 	<body>
 	    <input type="hidden" id="ajaxgetquestionurl" value = "<?php echo addSession('ajax/getquestionreveal.php'); ?>"/>
+	    <input type="hidden" id="ajaxcheckcorrect" value = "<?php echo addSession('ajax/checkcorrectreveal.php'); ?>"/>
 		<div class="reveal">
 			<div class="slides">
 <?= $sections ?>
@@ -112,18 +113,268 @@ $OUTPUT->header();
 		
 		<script type="text/javascript">
 		
-		   Reveal.addEventListener( 'ready', function( event ) {
-	                // event.currentSlide, event.indexh, event.indexv
-	                console.log("cur slide", event.currentSlide); 
-	                
+		   var canobj = {};
+		
+		   Reveal.addEventListener( "mousedown", function( event ) {
+		   
+		        if ( $( event.target ).is( ":button.revealtogcorrect" ) ) {
+		   
+		   
+		                if (event.target.dataset.qtype == 'structure') {
+                          
+                            var mol = canobj['can'+event.target.id.substring(3)].getMolecule();
+                            var usrresmolfile = ChemDoodle.writeMOL(mol);
+
+                            
+                            structure = ChemDoodle.readMOL($('#ta'+ event.target.id.substring(3)).val());
+                            
+                            canobj['can'+event.target.id.substring(3)].loadMolecule(structure);
+                            $('#ta'+ event.target.id.substring(3)).val(usrresmolfile);
+                            
+                        }
+                        
+                        if (event.target.dataset.qtype == 'mechanism') {
+                            
+                            var usrresjson = JSON.stringify(new ChemDoodle.io.JSONInterpreter().contentTo(canobj['can'+event.target.id.substring(3)].molecules, canobj['can'+event.target.id.substring(3)].shapes));
+                            
+                            
+                            var structure = ChemDoodle.readJSON($('#ta'+ event.target.id.substring(3)).val());
+                            canobj['can'+ event.target.id.substring(3)].loadContent(structure.molecules, structure.shapes);
+                                
+                            $('#ta'+ event.target.id.substring(3)).val(usrresjson);
+                            
+                        }
+                        
+                        if (event.target.dataset.qtype == 'numeric' || event.target.dataset.qtype == 'alphanumeric') {
+                        
+                           temp = $('#'+event.target.id.substring(3)).val();
+                           
+                           $('#'+ event.target.id.substring(3)).val( $('#ta'+ event.target.id.substring(3)).val() );
+                           $('#ta'+ event.target.id.substring(3)).val(temp);
+
+                        
+                        }
+                        
+                        
+                         if (event.target.dataset.qtype == 'mcq') {
+                        
+                           //temp = $('#'+event.target.id.substring(3)).val();
+                           
+                           //read current mcqs
+                            var prefix = '';
+                            var usrres = '';
+                            $('input[type="checkbox"]:checked').each(function() {
+                               usrres += prefix + this.value;
+                               prefix = ',';     
+                               //console.log(this.value);
+                            });
+                           
+                           //show mcq from textarea
+                           tamcq = $('#ta'+ event.target.id.substring(3)).val().split(",");
+                           
+                           //for (var i = 0; i < tamcq.length; i++) {
+                           $('input[type="checkbox"]').each(function() {
+                           
+                                if ($.inArray(this.value, tamcq) == -1) {
+                                $('input[value='+this.value+']').prop('checked', false);
+                                } else {
+                                $('input[value='+this.value+']').prop('checked', true);
+                                }
+                                //console.log($scope.answerEntries[i].answer_id);
+                                //console.log($scope.answerEntries[i].correct);
+                                //if ($scope.answerEntries[i].correct == '1') {
+                                //console.log('Why Not'+$scope.answerEntries[i].answer_id);
+                                
+                                //} else {
+                                //$('input[value='+tamcq[i]+']').prop('checked', false);
+                                //}
+                           });
+                           
+                           $('#ta'+ event.target.id.substring(3)).val(usrres);
+                           
+                           
+                           
+                           
+                           //$('#'+ event.target.id.substring(3)).val( $('#ta'+ event.target.id.substring(3)).val() );
+                           //$('#ta'+ event.target.id.substring(3)).val(temp);
+                           
+                           /*
+                           for (var i = 0; i < $scope.answerEntries.length; i++) {
+                                //console.log($scope.answerEntries[i].answer_id);
+                                //console.log($scope.answerEntries[i].correct);
+                                if ($scope.answerEntries[i].correct == '1') {
+                                //console.log('Why Not'+$scope.answerEntries[i].answer_id);
+                                $('input[value='+$scope.answerEntries[i].answer_id+']').prop('checked', true);
+                                } else {
+                                $('input[value='+$scope.answerEntries[i].answer_id+']').prop('checked', false);
+                                }
+                           }
+                           */
+                           
+
+                        
+                        }
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		        }
+		   
+		   
+                
+                
+                if ( $( event.target ).is( ":button.revealsubmit" ) ) {
+
+                  console.log(event.target.id);
+                  
+                  
+                  
+                  console.log(event.target.dataset.qid);
+                  console.log(event.target.dataset.qtype);
+                  
+                  
+                  //get responses from page
+                        if (event.target.dataset.qtype == 'mcq') {
+                            //get csv of answers
+                            var prefix = '';
+                            var usrres = '';
+                            $('input[type="checkbox"]:checked').each(function() {
+                               usrres += prefix + this.value;
+                               prefix = ',';     
+                               //console.log(this.value);
+                            });
+                            //console.log(response);
+                        }
+                        
+                        /*
+                        if (event.target.dataset.qtype == 'slide') {
+                            //get csv of answers
+                            var response = '';
+                        }
+                        */
+                        
+                        
+                        
+                        if (event.target.dataset.qtype == 'numeric' || event.target.dataset.qtype == 'alphanumeric') {
+                            //get csv of answers
+                            //var prefix = '';
+                            var usrres = $('#'+event.target.id.substring(3)).val();
+                            console.log(event);
+                            console.log(usrres);
+
+                        }
+                  
+                        if (event.target.dataset.qtype == 'structure') {
+
+                            //console.log(canobj['can'+event.target.id.substring(3)]);
+                          
+                            var mol = canobj['can'+event.target.id.substring(3)].getMolecule();
+                            var usrres = ChemDoodle.writeMOL(mol);
+
+                        }
+                        
+                        
+                        if (event.target.dataset.qtype == 'mechanism') {
+                        //get csv of answers
+                            //canobj = event.target.id.substring(3);
+                            usrres = JSON.stringify(new ChemDoodle.io.JSONInterpreter().contentTo(canobj['can'+event.target.id.substring(3)].molecules, canobj['can'+event.target.id.substring(3)].shapes));
+                       
+                        }
+                  
+
+                     //compare response with correct answers
+                                      
+                     var data = {qid: event.target.dataset.qid, qtype: event.target.dataset.qtype, usrresponse: usrres, btnid: event.target.id };
+                     var ajaxcorurl = $('#ajaxcheckcorrect').val();
+                     //console.log(ajaxurl);
+                    
+                     $.ajax({
+                        type: 'POST',
+                        url: ajaxcorurl,
+                        data: data,
+                        success: function(response) {
+                           //console.log(response);
+                           response = JSON.parse(response);
+                           
+                           //add correct/my response toggel button to dom
+                           if (data.qtype == 'structure') {
+                           
+                           
+                           html = "<button data-qtype="+data.qtype+" class='revealtogcorrect' id='tog"+data.btnid.substring(3)+"' >Click ME</button>";
+                           html += "<textarea id='ta"+data.btnid.substring(3)+"'>"+response.correctmolfile+"</textarea>";
+                           
+                           $('#'+data.btnid).replaceWith(html);
+                           
+                           
+                           }
+                           
+                           
+                           if (data.qtype == 'mechanism') {
+                           
+                           
+                           html = "<button data-qtype="+data.qtype+" class='revealtogcorrect' id='tog"+data.btnid.substring(3)+"' >Click ME</button>";
+                           html += "<textarea id='ta"+data.btnid.substring(3)+"'>"+response.correctjson+"</textarea>";
+                           
+                           $('#'+data.btnid).replaceWith(html);
+                           
+                           
+                           }
+                           
+                           if (data.qtype == 'numeric' || data.qtype == 'alphanumeric') {
+                           
+                           
+                           html = "<button data-qtype="+data.qtype+" class='revealtogcorrect' id='tog"+data.btnid.substring(3)+"' >Click ME</button>";
+                           html += "<textarea id='ta"+data.btnid.substring(3)+"'>"+response.correctother+"</textarea>";
+                           
+                           $('#'+data.btnid).replaceWith(html);
+                           
+                           
+                           }
+                           
+                           if (data.qtype == 'mcq') {
+                           
+                           
+                            html = "<button data-qtype="+data.qtype+" class='revealtogcorrect' id='tog"+data.btnid.substring(3)+"' >Click ME</button>";
+                           html += "<textarea id='ta"+data.btnid.substring(3)+"'>"+response.correctother+"</textarea>";
+                           
+                           $('#'+data.btnid).replaceWith(html);
+                           
+                           
+                           }
+                           
+                           
+                           
+                           
+                           
+                                             
+                        }
+                     
+                     
+                     });
+                  
+                 
+
+                }
+
+
            } );
+           
+           
+           Reveal.addEventListener( 'ready', function( event ) {
+	            // event.currentSlide, event.indexh, event.indexv
+           } );
+           
+           
            
            
            Reveal.addEventListener( 'slidechanged', function( event ) {
            
                 console.log("cur slide", event.currentSlide);
                 var qdiv = event.currentSlide.querySelector('.question_ph_div');
-                
+                var currentslide = event.currentSlide;
                 //console.log(qdiv.dataset.qid);
                 //console.log(qdiv.dataset.aid);
                 
@@ -131,7 +382,7 @@ $OUTPUT->header();
                 
                 if($(qdiv).length !== 0) {
 
-                    var data = {qid: qdiv.dataset.qid}
+                    var data = {qid: qdiv.dataset.qid};
                     var ajaxurl = $('#ajaxgetquestionurl').val();
                     console.log(ajaxurl);
                     
@@ -140,92 +391,92 @@ $OUTPUT->header();
                         url: ajaxurl,
                         data: data,
                         success: function(response) {
-                             console.log(response);
-                             response = JSON.parse(response);
+                           //console.log(response);
+                           response = JSON.parse(response);
                              
-                               //$('.questiondiv').append('<canvas id="initializeMeLater" width="150" height="150" style="border:1px solid black;">This is a message that shows if the browser doesn\'t support HTML5 canvas, which all modern browsers should support now.</canvas>');
-                    
-                    
-                    
-                    
-                    
-                       if (response.question_type == 'structure') {
-                       
-                            //$('.question_ph_div').append(response.question_html);
-                            
-                            $(qdiv).replaceWith(response.question_html)
-                            //$(qdiv).replaceWith(response.question_html)
-                            
-                            myCanvas = new ChemDoodle.SketcherCanvas(response.unique_id, 500, 300, {useServices:false, oneMolecule:false});
-                            myCanvas.emptyMessage = 'No Data Loaded!';
-                            //molfile = "molfile as text";
-                            //var caffeine = ChemDoodle.readMOL(response);
-                            //myCanvas.loadMolecule(caffeine);
-                            myCanvas.repaint();
+                           if (response.question_type == 'structure') {
+                           
+                                //$('.question_ph_div').append(response.question_html);
+                                
+                                $(qdiv).replaceWith(response.question_html)
+                                //$(qdiv).replaceWith(response.question_html)
+                                
+                                canobj['can'+ response.unique_id] = new ChemDoodle.SketcherCanvas(response.unique_id, 500, 300, {useServices:false, oneMolecule:false});
+                                canobj['can'+ response.unique_id].emptyMessage = 'No Data Loaded!';
+                                //molfile = "molfile as text";
+                                //var caffeine = ChemDoodle.readMOL(response);
+                                //myCanvas.loadMolecule(caffeine);
+                                canobj['can'+ response.unique_id].repaint();
+                                 
+                           }
+                                       
+                           if (response.question_type == 'mechanism') {
+                           
+                                //$('.question_ph_div').append(response.question_html);
+                                $(qdiv).replaceWith(response.question_html)
+                                canobj['can'+ response.unique_id] = new ChemDoodle.SketcherCanvas(response.unique_id, 500, 300, {useServices:false, oneMolecule:false});
+                                canobj['can'+ response.unique_id].emptyMessage = 'No Data Loaded!';
+                                moljson = response.strippedanswerjson;
+                                
+                                console.log(moljson);
+                                
+                                var structure = ChemDoodle.readJSON(moljson);
+                                canobj['can'+ response.unique_id].loadContent(structure.molecules, structure.shapes);
+                                
+                                //var caffeine = ChemDoodle.readMOL(response);
+                                //myCanvas.loadMolecule(caffeine);
+                                canobj['can'+ response.unique_id].repaint();
+                                 
+                          }
+                           
+                          if (response.question_type == 'mcq') {
+                           
+                                //$('.question_ph_div').append(response.question_html);
+                                $(qdiv).replaceWith(response.question_html)
                              
-                       }
-                                   
-                       if (response.question_type == 'mechanism') {
-                       
-                            //$('.question_ph_div').append(response.question_html);
-                            $(qdiv).replaceWith(response.question_html)
-                            myCanvas = new ChemDoodle.SketcherCanvas(response.unique_id, 500, 300, {useServices:false, oneMolecule:false});
-                            myCanvas.emptyMessage = 'No Data Loaded!';
-                            moljson = response.strippedanswerjson;
-                            
-                            console.log(moljson);
-                            
-                            var structure = ChemDoodle.readJSON(moljson);
-                            myCanvas.loadContent(structure.molecules, structure.shapes);
-                            
-                            //var caffeine = ChemDoodle.readMOL(response);
-                            //myCanvas.loadMolecule(caffeine);
-                            myCanvas.repaint();
+                                 
+                          }
+                          
+                          if (response.question_type == 'numeric'  || response.question_type == 'alphanumeric' ) {
+                           
+                                //$('.question_ph_div').append(response.question_html);
+                                $(qdiv).replaceWith(response.question_html)
                              
-                       }
-                              
+                                 
+                          }
+                          
+                          
+                          console.log(event.currentSlide);
+                          
+                          //var btn = currentslide.querySelector("#btn" + response.unique_id);
+                          console.log(response.unique_id);
+                           $("#btn" + response.unique_id).on("click", function () {
+                            console.log ('Button clicked');
+                          });
+                          
+                          
+                          
+                          
+      
                              
                         }
                      });
-                     
-                     
-                     
-                      //var caffeineMolFile = 'Molecule Name\n  CHEMDOOD08070920033D 0   0.00000     0.00000     0\n[Insert Comment Here]\n 14 15  0  0  0  0  0  0  0  0  1 V2000\n   -0.3318    2.0000    0.0000   O 0  0  0  1  0  0  0  0  0  0  0  0\n   -0.3318    1.0000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -1.1980    0.5000    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n    0.5342    0.5000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -1.1980   -0.5000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -2.0640    1.0000    0.0000   C 0  0  0  4  0  0  0  0  0  0  0  0\n    1.4804    0.8047    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n    0.5342   -0.5000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -2.0640   -1.0000    0.0000   O 0  0  0  1  0  0  0  0  0  0  0  0\n   -0.3318   -1.0000    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n    2.0640   -0.0000    0.0000   C 0  0  0  2  0  0  0  0  0  0  0  0\n    1.7910    1.7553    0.0000   C 0  0  0  4  0  0  0  0  0  0  0  0\n    1.4804   -0.8047    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n   -0.3318   -2.0000    0.0000   C 0  0  0  4  0  0  0  0  0  0  0  0\n  1  2  2  0  0  0  0\n  3  2  1  0  0  0  0\n  4  2  1  0  0  0  0\n  3  5  1  0  0  0  0\n  3  6  1  0  0  0  0\n  7  4  1  0  0  0  0\n  4  8  2  0  0  0  0\n  9  5  2  0  0  0  0\n 10  5  1  0  0  0  0\n 10  8  1  0  0  0  0\n  7 11  1  0  0  0  0\n  7 12  1  0  0  0  0\n 13  8  1  0  0  0  0\n 13 11  2  0  0  0  0\n 10 14  1  0  0  0  0\nM  END\n> <DATE>\n07-08-2009\n';
-                     
-                
-                
-                
-
-                  
-                
+                                  
                 }
                 
+                 //$('#slides_edit').on('dblclick', ".ui-sortable-handle", function(e){
+
                 
                 
-                console.log(event.indexh);
+                
+                
+                
+                //console.log(event.indexh);
 	            // event.previousSlide, event.currentSlide, event.indexh, event.indexv
             } );
            
            
-		
-		
-		
-            Reveal.addEventListener( 'myslide1', function() {
-
-               if(!window.myCanvas){
-    // we don't provide a width or height, as those values will be absorbed from the existing element
-    // place the object in the global scope so we can access it outside of this function by excluding the var keyword
-                    //myCanvas = new ChemDoodle.ViewerCanvas('initializeMeLater');
-                    myCanvas = new ChemDoodle.SketcherCanvas('initializeMeLater', 500, 300, {useServices:false, oneMolecule:false});
-                    myCanvas.emptyMessage = 'No Data Loaded!';
-                    var caffeineMolFile = 'Molecule Name\n  CHEMDOOD08070920033D 0   0.00000     0.00000     0\n[Insert Comment Here]\n 14 15  0  0  0  0  0  0  0  0  1 V2000\n   -0.3318    2.0000    0.0000   O 0  0  0  1  0  0  0  0  0  0  0  0\n   -0.3318    1.0000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -1.1980    0.5000    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n    0.5342    0.5000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -1.1980   -0.5000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -2.0640    1.0000    0.0000   C 0  0  0  4  0  0  0  0  0  0  0  0\n    1.4804    0.8047    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n    0.5342   -0.5000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -2.0640   -1.0000    0.0000   O 0  0  0  1  0  0  0  0  0  0  0  0\n   -0.3318   -1.0000    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n    2.0640   -0.0000    0.0000   C 0  0  0  2  0  0  0  0  0  0  0  0\n    1.7910    1.7553    0.0000   C 0  0  0  4  0  0  0  0  0  0  0  0\n    1.4804   -0.8047    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n   -0.3318   -2.0000    0.0000   C 0  0  0  4  0  0  0  0  0  0  0  0\n  1  2  2  0  0  0  0\n  3  2  1  0  0  0  0\n  4  2  1  0  0  0  0\n  3  5  1  0  0  0  0\n  3  6  1  0  0  0  0\n  7  4  1  0  0  0  0\n  4  8  2  0  0  0  0\n  9  5  2  0  0  0  0\n 10  5  1  0  0  0  0\n 10  8  1  0  0  0  0\n  7 11  1  0  0  0  0\n  7 12  1  0  0  0  0\n 13  8  1  0  0  0  0\n 13 11  2  0  0  0  0\n 10 14  1  0  0  0  0\nM  END\n> <DATE>\n07-08-2009\n';
-                    var caffeine = ChemDoodle.readMOL(caffeineMolFile);
-                    myCanvas.loadMolecule(caffeine);
-                    
-                     myCanvas.repaint();
-  }
-
-            } );
+	
         </script>
 	</body>
 </html>
@@ -237,6 +488,9 @@ $OUTPUT->header();
 
 
 $OUTPUT->footerStart();
+
+
+
 
 $OUTPUT->footerEnd();
 

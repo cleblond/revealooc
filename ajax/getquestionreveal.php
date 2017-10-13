@@ -36,6 +36,8 @@ $row = $PDOX->rowDie("SELECT * FROM {$p}eo_questions WHERE question_id=$qid");
 
         $uniqueid = uniqid();
         $data['unique_id'] = $uniqueid;
+        //echo $uniqueid;
+        $submit_btn = "<p><button data-qtype='".$row['question_type']."' data-qid='".$row['question_id']."' type='button' class='revealsubmit' id='bnt".$uniqueid . "' >Submit</button></p>";
         $question_text = "<p>".$row['question_text']."</p>";
 
         if ($row['question_type'] == 'structure') {
@@ -69,26 +71,48 @@ $row = $PDOX->rowDie("SELECT * FROM {$p}eo_questions WHERE question_id=$qid");
                  $rowsa = $PDOX->allRowsDie($sql,
 		         array(
 		            //':QID' => $_POST['question_id'],
-		            ':QID' => $question_id
+		            ':QID' => $qid
 		         )
-	             );         
+	             );
 	             
-	             $data['questions']['answers'] = $rowsa;
+	               $question_html = $question_text . '<div class="funkyradio">';
+
+                    $i=1;
+             
+                    foreach ($rowsa as $rowa) {
+                        $checked = '';
+                        //set the correct answers
+                        /*
+                        if ($readonly == true) {
+                          if ($rowa['correct'] == 1) {
+                              $checked = 'checked';
+                          }
+                        }*/
+                        //echo "Checked = ".$checked;
+                        $checked='';
+                   
+                        $question_html .= '<div class="funkyradio-success">
+                                <input value="'.$rowa['answer_id'].'"  type="checkbox" name="responseother[]" id="responseother'.$i.'" '.$checked.'>
+                                <label for="responseother'.$i.'"> '.$rowa['answerother'].'</label>
+                            </div>';
+                        $i++;
+                        //echo $answer['answerother'];
+                    } 
+                    //echo "<br/>".$submitbtn . $response_answer_btns_html; 
+                    //$question_html .= "</form>";
+                    
+	                $data['question_html'] = $question_html;
+	             
+	             
+	             
+	             
+	             //$data['questions']['answers'] = $rowsa;
 	    }
 	    
-	    if ($row['question_type'] == 'shortanswer') {
+	    if ($row['question_type'] == 'numeric'  || $row['question_type'] == 'alphanumeric') {
 	             
 	             
-	             $sql = "SELECT answer_id, answerother, correct FROM {$p}eo_answers WHERE question_id = :QID ORDER BY RAND()";
-
-                 $rowsa = $PDOX->allRowsDie($sql,
-		         array(
-		            //':QID' => $_POST['question_id'],
-		            ':QID' => $question_id
-		         )
-	             );         
-	             
-	             $data['questions']['answers'] = $rowsa;
+	        $data['question_html'] = $question_text . '<input type = "text" id="'.$uniqueid.'"  />';
 	    }
 	    
 	     if ($row['question_type'] == 'formula') {
@@ -124,6 +148,9 @@ $row = $PDOX->rowDie("SELECT * FROM {$p}eo_questions WHERE question_id=$qid");
 	                 
 	                 
 	     }
+	     
+	     $data['question_html'] .= $submit_btn;
+	     
 
 
         $data = $data + $row;
