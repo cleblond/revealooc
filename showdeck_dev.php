@@ -80,6 +80,15 @@ $OUTPUT->header();
 		            <script type="text/javascript" src="chemdoodle/ChemDoodleWeb.js"></script>
                     <script type="text/javascript" src="chemdoodle/uis/ChemDoodleWeb-uis.js"></script>
 		
+		<!-- expected question_ph_div
+		<div style="height: 400px;" data-qid="51">Question Block</div>
+		
+		-->
+		
+		
+		
+		
+		
 		
 		
 
@@ -113,11 +122,15 @@ $OUTPUT->header();
            Reveal.addEventListener( 'slidechanged', function( event ) {
            
                 console.log("cur slide", event.currentSlide);
-                var qdiv = event.currentSlide.querySelector('.questiondiv');
+                var qdiv = event.currentSlide.querySelector('.question_ph_div');
                 
                 //console.log(qdiv.dataset.qid);
                 //console.log(qdiv.dataset.aid);
+                
+                //need to replace with .question_div
+                
                 if($(qdiv).length !== 0) {
+
                     var data = {qid: qdiv.dataset.qid}
                     var ajaxurl = $('#ajaxgetquestionurl').val();
                     console.log(ajaxurl);
@@ -128,28 +141,62 @@ $OUTPUT->header();
                         data: data,
                         success: function(response) {
                              console.log(response);
-                        
-                      
-
+                             response = JSON.parse(response);
+                             
+                               //$('.questiondiv').append('<canvas id="initializeMeLater" width="150" height="150" style="border:1px solid black;">This is a message that shows if the browser doesn\'t support HTML5 canvas, which all modern browsers should support now.</canvas>');
+                    
+                    
+                    
+                    
+                    
+                       if (response.question_type == 'structure') {
+                       
+                            //$('.question_ph_div').append(response.question_html);
+                            
+                            $(qdiv).replaceWith(response.question_html)
+                            //$(qdiv).replaceWith(response.question_html)
+                            
+                            myCanvas = new ChemDoodle.SketcherCanvas(response.unique_id, 500, 300, {useServices:false, oneMolecule:false});
+                            myCanvas.emptyMessage = 'No Data Loaded!';
+                            //molfile = "molfile as text";
+                            //var caffeine = ChemDoodle.readMOL(response);
+                            //myCanvas.loadMolecule(caffeine);
+                            myCanvas.repaint();
+                             
+                       }
+                                   
+                       if (response.question_type == 'mechanism') {
+                       
+                            //$('.question_ph_div').append(response.question_html);
+                            $(qdiv).replaceWith(response.question_html)
+                            myCanvas = new ChemDoodle.SketcherCanvas(response.unique_id, 500, 300, {useServices:false, oneMolecule:false});
+                            myCanvas.emptyMessage = 'No Data Loaded!';
+                            moljson = response.strippedanswerjson;
+                            
+                            console.log(moljson);
+                            
+                            var structure = ChemDoodle.readJSON(moljson);
+                            myCanvas.loadContent(structure.molecules, structure.shapes);
+                            
+                            //var caffeine = ChemDoodle.readMOL(response);
+                            //myCanvas.loadMolecule(caffeine);
+                            myCanvas.repaint();
+                             
+                       }
+                              
+                             
                         }
                      });
+                     
+                     
+                     
+                      //var caffeineMolFile = 'Molecule Name\n  CHEMDOOD08070920033D 0   0.00000     0.00000     0\n[Insert Comment Here]\n 14 15  0  0  0  0  0  0  0  0  1 V2000\n   -0.3318    2.0000    0.0000   O 0  0  0  1  0  0  0  0  0  0  0  0\n   -0.3318    1.0000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -1.1980    0.5000    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n    0.5342    0.5000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -1.1980   -0.5000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -2.0640    1.0000    0.0000   C 0  0  0  4  0  0  0  0  0  0  0  0\n    1.4804    0.8047    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n    0.5342   -0.5000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -2.0640   -1.0000    0.0000   O 0  0  0  1  0  0  0  0  0  0  0  0\n   -0.3318   -1.0000    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n    2.0640   -0.0000    0.0000   C 0  0  0  2  0  0  0  0  0  0  0  0\n    1.7910    1.7553    0.0000   C 0  0  0  4  0  0  0  0  0  0  0  0\n    1.4804   -0.8047    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n   -0.3318   -2.0000    0.0000   C 0  0  0  4  0  0  0  0  0  0  0  0\n  1  2  2  0  0  0  0\n  3  2  1  0  0  0  0\n  4  2  1  0  0  0  0\n  3  5  1  0  0  0  0\n  3  6  1  0  0  0  0\n  7  4  1  0  0  0  0\n  4  8  2  0  0  0  0\n  9  5  2  0  0  0  0\n 10  5  1  0  0  0  0\n 10  8  1  0  0  0  0\n  7 11  1  0  0  0  0\n  7 12  1  0  0  0  0\n 13  8  1  0  0  0  0\n 13 11  2  0  0  0  0\n 10 14  1  0  0  0  0\nM  END\n> <DATE>\n07-08-2009\n';
+                     
                 
                 
                 
 
-                    $('.questiondiv').append('<canvas id="initializeMeLater" width="150" height="150" style="border:1px solid black;">This is a message that shows if the browser doesn\'t support HTML5 canvas, which all modern browsers should support now.</canvas>');
-                    
-                    myCanvas = new ChemDoodle.SketcherCanvas('initializeMeLater', 500, 300, {useServices:false, oneMolecule:false});
-                    
-                    myCanvas.emptyMessage = 'No Data Loaded!';
-                    
-                    var caffeineMolFile = 'Molecule Name\n  CHEMDOOD08070920033D 0   0.00000     0.00000     0\n[Insert Comment Here]\n 14 15  0  0  0  0  0  0  0  0  1 V2000\n   -0.3318    2.0000    0.0000   O 0  0  0  1  0  0  0  0  0  0  0  0\n   -0.3318    1.0000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -1.1980    0.5000    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n    0.5342    0.5000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -1.1980   -0.5000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -2.0640    1.0000    0.0000   C 0  0  0  4  0  0  0  0  0  0  0  0\n    1.4804    0.8047    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n    0.5342   -0.5000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -2.0640   -1.0000    0.0000   O 0  0  0  1  0  0  0  0  0  0  0  0\n   -0.3318   -1.0000    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n    2.0640   -0.0000    0.0000   C 0  0  0  2  0  0  0  0  0  0  0  0\n    1.7910    1.7553    0.0000   C 0  0  0  4  0  0  0  0  0  0  0  0\n    1.4804   -0.8047    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n   -0.3318   -2.0000    0.0000   C 0  0  0  4  0  0  0  0  0  0  0  0\n  1  2  2  0  0  0  0\n  3  2  1  0  0  0  0\n  4  2  1  0  0  0  0\n  3  5  1  0  0  0  0\n  3  6  1  0  0  0  0\n  7  4  1  0  0  0  0\n  4  8  2  0  0  0  0\n  9  5  2  0  0  0  0\n 10  5  1  0  0  0  0\n 10  8  1  0  0  0  0\n  7 11  1  0  0  0  0\n  7 12  1  0  0  0  0\n 13  8  1  0  0  0  0\n 13 11  2  0  0  0  0\n 10 14  1  0  0  0  0\nM  END\n> <DATE>\n07-08-2009\n';
-                    
-                    var caffeine = ChemDoodle.readMOL(caffeineMolFile);
-                    
-                    myCanvas.loadMolecule(caffeine);
-                    
-                    myCanvas.repaint();
+                  
                 
                 }
                 

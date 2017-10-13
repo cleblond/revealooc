@@ -206,12 +206,12 @@ $(document).ready(function() {
                         $( ".ui-sortable-handle" ).css('border', "dashed"); 
                     
                         //save current slide
-                        console.log($(".ui-sortable-handle:eq("+(edit_slide-1)+")"));
+                        //console.log($(".ui-sortable-handle:eq("+(edit_slide-1)+")"));
                         
                         
                         //var elements = $(tinyMCE.get('question_text').getContent());
 
-                        console.log(tinyMCE.get('question_text').getContent());
+                        //console.log(tinyMCE.get('question_text').getContent());
                         //disable script tags
                         var newtext = tinyMCE.get('question_text').getContent();
                         //elements.find("script").attr("type","application/json");
@@ -351,6 +351,16 @@ $(document).ready(function() {
 	
 	
 	$('#slideEditForm').submit(function() {
+
+
+        //save the current slide_edit
+        var newtext = tinyMCE.get('question_text').getContent();
+        var finaltext = newtext.replace(/type=\"text\/javascript\"/g, 'type="application/json"');                        
+        $(".ui-sortable-handle:eq("+(edit_slide-1)+")").html(finaltext);
+
+
+
+
 
         var sections = ''
         i=0;
