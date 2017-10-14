@@ -6,6 +6,10 @@ font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;}
 width: 100%;
 }
 
+.question_ph_div {
+  background-color: #5cb85c;
+}
+
 
 #items{
   list-style:none;

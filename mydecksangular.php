@@ -68,7 +68,7 @@
                     
                     <td ng-if="myonly == '1'" ng-cloak>{{data.share == "1" | iif : "Yes" : "No"}}</td>
                     <td><small>{{data.updated_at}}</small></td>
-                    <td><a href='showdeck_dev.php?slidedeck_id={{data.id}}' title="Preview"><i class="fa fa-search" aria-hidden="true"></i></a></td>
+                    <td><a href='showdeck.php?slidedeck_id={{data.id}}' title="Preview"><i class="fa fa-search" aria-hidden="true"></i></a></td>
                <!--     <td><a href='activityintro.php?activity_id={{data.activity_id}}' title='Attempt Activity'><i class='fa fa-search' aria-hidden='true'></i></a></td> -->
                     
 

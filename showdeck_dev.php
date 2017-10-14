@@ -364,7 +364,7 @@ $OUTPUT->header();
            
            
            Reveal.addEventListener( 'ready', function( event ) {
-	            // event.currentSlide, event.indexh, event.indexv
+	            setupQuestionHtml();
            } );
            
            
@@ -372,6 +372,17 @@ $OUTPUT->header();
            
            Reveal.addEventListener( 'slidechanged', function( event ) {
            
+             
+           setupQuestionHtml();
+                
+                
+                
+                //console.log(event.indexh);
+	            // event.previousSlide, event.currentSlide, event.indexh, event.indexv
+            });
+            
+            
+            function setupQuestionHtml() {
                 console.log("cur slide", event.currentSlide);
                 var qdiv = event.currentSlide.querySelector('.question_ph_div');
                 var currentslide = event.currentSlide;
@@ -467,13 +478,7 @@ $OUTPUT->header();
                  //$('#slides_edit').on('dblclick', ".ui-sortable-handle", function(e){
 
                 
-                
-                
-                
-                
-                //console.log(event.indexh);
-	            // event.previousSlide, event.currentSlide, event.indexh, event.indexv
-            } );
+             }  //end function   
            
            
 	

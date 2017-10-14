@@ -16,6 +16,8 @@ $displayname = $USER->displayname;
 //$acl = new Acl();
 
 
+$sesspieces = explode('=', addSession(""));
+$phpsessid = $sesspieces[1];
 
 if ( ! $USER->instructor ) die("Requires instructor role");
 // Handle your POST data here...
@@ -252,8 +254,8 @@ if (isset($_GET['slidedeck_id'])) {
         $slide_bgcolor = '#ffffff';
         
         $options = new stdClass();
-        $options->theme = 'black';
-        $options->transition = 'slide';
+        $options->theme = 'white';
+        $options->transition = 'convex';
 
 }
 
@@ -420,14 +422,15 @@ $(document).ready(function () {
 	  browser_spellcheck : true,
 	  relative_urls: false,
 	  visualblocks_default_state: true,
-	  content_css: 'css/mce-reveal-styles.css', 
+	  content_css: 'css/mce-reveal-styles.css',
 	  resize: true,
+	  sessionid: "<?php echo $phpsessid; ?>",
 	  plugins: [
-	    'advlist autolink autoresize lists link image charmap print preview anchor',
+	    'oocquestions advlist autolink autoresize lists link image charmap print preview anchor',
 	    'searchreplace visualblocks code fullscreen noneditable',
 	    'insertdatetime media table textcolor contextmenu paste code responsivefilemanager ooclink ooccdimage emoticons image media template formula hr colorpicker'
 	  ],
-	  toolbar: 'insertfile undo redo | styleselect | fontselect fontsizeselect bold italic forecolor backcolor mybutton | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | charmap | emoticons hr | responsivefilemanager | ooclink ooccdimage | code image media | template formula',
+	  toolbar: 'oocquestions insertfile undo redo | styleselect | fontselect fontsizeselect bold italic forecolor backcolor mybutton | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | charmap | emoticons hr | responsivefilemanager | ooclink ooccdimage | code image media | template formula',
 	   font_formats: 'Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n',
 	   setup: function (editor) {
             editor.on('keyup', function (e) {
