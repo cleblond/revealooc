@@ -314,6 +314,8 @@ $tags = '';
                             <option value="serif" <?php if ($options->theme == 'serif') echo 'selected'; ?> >serif</option>
                             <option value="simple" <?php if ($options->theme == 'simple') echo 'selected'; ?> >simple</option>
                             <option value="solarized" <?php if ($options->theme == 'solarized') echo 'selected'; ?> >solarized</option>
+                            <option value="moon" <?php if ($options->theme == 'moon') echo 'selected'; ?> >moon</option>
+                            <option value="blood" <?php if ($options->theme == 'blood') echo 'selected'; ?> >blood</option>
                             </select>
                             </div>
                             <br/>

@@ -16,8 +16,7 @@ body {
 
 .reveal {
   font-family: "Source Sans Pro", Helvetica, sans-serif;
-/* CRL MODE */
-  font-size: 30px;
+  font-size: 42px;
   font-weight: normal;
   color: #222; }
 
@@ -230,7 +229,7 @@ body {
  * IMAGES
  *********************************************/
 .reveal section img {
-  margin: 0px 0px;
+  margin: 15px 0px;
   background: rgba(255, 255, 255, 0.12);
   border: 4px solid #222;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); }

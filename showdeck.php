@@ -199,25 +199,7 @@ $OUTPUT->header();
                            
                            $('#ta'+ event.target.id.substring(3)).val(usrres);
                            
-                           
-                           
-                           
-                           //$('#'+ event.target.id.substring(3)).val( $('#ta'+ event.target.id.substring(3)).val() );
-                           //$('#ta'+ event.target.id.substring(3)).val(temp);
-                           
-                           /*
-                           for (var i = 0; i < $scope.answerEntries.length; i++) {
-                                //console.log($scope.answerEntries[i].answer_id);
-                                //console.log($scope.answerEntries[i].correct);
-                                if ($scope.answerEntries[i].correct == '1') {
-                                //console.log('Why Not'+$scope.answerEntries[i].answer_id);
-                                $('input[value='+$scope.answerEntries[i].answer_id+']').prop('checked', true);
-                                } else {
-                                $('input[value='+$scope.answerEntries[i].answer_id+']').prop('checked', false);
-                                }
-                           }
-                           */
-                           
+                          
 
                         
                         }
@@ -307,11 +289,27 @@ $OUTPUT->header();
                            response = JSON.parse(response);
                            
                            //add correct/my response toggel button to dom
+                           
+                           if (response.correct == 0) {
+                           
+                                 if (response.feedback == '') {response.feedback = "Sorry that's incorrect"};
+                           
+                                 feedback = "<div class='feedback_neg'>" + response.feedback + "</div>";
+                           } else {
+                                 if (response.feedback == '') {response.feedback = "Correct!"};
+                                 feedback = "<div class='feedback_pos'>" + response.feedback + "</div>";
+                           }
+                           
+                           
+                            
+                           
+                           
                            if (data.qtype == 'structure') {
                            
                            
                            html = "<button data-qtype="+data.qtype+" class='revealtogcorrect' id='tog"+data.btnid.substring(3)+"' >Show Correct</button>";
                            html += "<textarea style='display:none' id='ta"+data.btnid.substring(3)+"'>"+response.correctmolfile+"</textarea>";
+                           html += feedback;
                            
                            $('#'+data.btnid).replaceWith(html);
                            
@@ -324,7 +322,7 @@ $OUTPUT->header();
                            
                            html = "<button data-qtype="+data.qtype+" class='revealtogcorrect' id='tog"+data.btnid.substring(3)+"' >Show Correct</button>";
                            html += "<textarea style='display:none' id='ta"+data.btnid.substring(3)+"'>"+response.correctjson+"</textarea>";
-                           
+                           html += feedback;
                            $('#'+data.btnid).replaceWith(html);
                            
                            
@@ -335,7 +333,7 @@ $OUTPUT->header();
                            
                            html = "<button data-qtype="+data.qtype+" class='revealtogcorrect' id='tog"+data.btnid.substring(3)+"' >Show Correct</button>";
                            html += "<textarea style='display:none' id='ta"+data.btnid.substring(3)+"'>"+response.correctother+"</textarea>";
-                           
+                           html += feedback;
                            $('#'+data.btnid).replaceWith(html);
                            
                            
@@ -344,19 +342,14 @@ $OUTPUT->header();
                            if (data.qtype == 'mcq') {
                            
                            
-                            html = "<button data-qtype="+data.qtype+" class='revealtogcorrect' id='tog"+data.btnid.substring(3)+"' >Show Correct</button>";
+                           html = "<button data-qtype="+data.qtype+" class='revealtogcorrect' id='tog"+data.btnid.substring(3)+"' >Show Correct</button>";
                            html += "<textarea style='display:none' id='ta"+data.btnid.substring(3)+"'>"+response.correctother+"</textarea>";
-                           
+                           html += feedback;
                            $('#'+data.btnid).replaceWith(html);
                            
                            
                            }
-                           
-                           
-                           
-                           
-                           
-                                             
+              
                         }
                      
                      
@@ -371,16 +364,127 @@ $OUTPUT->header();
            
            
            Reveal.addEventListener( 'ready', function( event ) {
-	            setupQuestionHtml();
+	            //setupQuestionHtml();
+	            setupQuestionsHtmlAll();
            } );
            
            Reveal.addEventListener( 'slidechanged', function( event ) {
              
-           setupQuestionHtml();
+           //setupQuestionHtml();
                 
            });
             
             
+            function setupQuestionsHtmlAll() {
+            
+              
+              $('.question_ph_div').each(function() {
+              
+                            //var qdiv = event.currentSlide.querySelector('.question_ph_div');
+                            //var currentslide = event.currentSlide;
+                            //console.log(qdiv.dataset.qid);
+                            //console.log(qdiv.dataset.aid);
+                            
+                            //need to replace with .question_div
+                            
+                            //$(this).attr("data-qid");
+                            
+                            
+                            //if($(qdiv).length !== 0) {
+
+                                var data = {qid: $(this).attr("data-qid")};
+                                var ajaxurl = $('#ajaxgetquestionurl').val();
+                                
+                                var curqdiv = this;
+                                
+                                //console.log('curqdiv', curqdiv);
+                                
+                                 $.ajax({
+                                    type: 'POST',
+                                    url: ajaxurl,
+                                    data: data,
+                                    success: function(response) {
+                                       //console.log(response);
+                                       response = JSON.parse(response);
+                                         
+                                       if (response.question_type == 'structure') {
+                                       
+                                            //$('.question_ph_div').append(response.question_html);
+                                            
+                                            $(curqdiv).replaceWith(response.question_html)
+                                            //$(qdiv).replaceWith(response.question_html)
+                                            
+                                            canobj['can'+ response.unique_id] = new ChemDoodle.SketcherCanvas(response.unique_id, 500, 300, {useServices:false, oneMolecule:false});
+                                            canobj['can'+ response.unique_id].emptyMessage = 'No Data Loaded!';
+                                            //molfile = "molfile as text";
+                                            //var caffeine = ChemDoodle.readMOL(response);
+                                            //myCanvas.loadMolecule(caffeine);
+                                            canobj['can'+ response.unique_id].repaint();
+                                             
+                                       }
+                                                   
+                                       if (response.question_type == 'mechanism') {
+                                       
+                                            //$('.question_ph_div').append(response.question_html);
+                                            $(curqdiv).replaceWith(response.question_html)
+                                            canobj['can'+ response.unique_id] = new ChemDoodle.SketcherCanvas(response.unique_id, 500, 300, {useServices:false, oneMolecule:false});
+                                            canobj['can'+ response.unique_id].emptyMessage = 'No Data Loaded!';
+                                            moljson = response.strippedanswerjson;
+                                            
+                                            //console.log(moljson);
+                                            
+                                            var structure = ChemDoodle.readJSON(moljson);
+                                            canobj['can'+ response.unique_id].loadContent(structure.molecules, structure.shapes);
+                                            
+                                            //var caffeine = ChemDoodle.readMOL(response);
+                                            //myCanvas.loadMolecule(caffeine);
+                                            canobj['can'+ response.unique_id].repaint();
+                                             
+                                      }
+                                       
+                                      if (response.question_type == 'mcq') {
+                                       
+                                            //$('.question_ph_div').append(response.question_html);
+                                            $(curqdiv).replaceWith(response.question_html)
+                                         
+                                             
+                                      }
+                                      
+                                      if (response.question_type == 'numeric'  || response.question_type == 'alphanumeric' ) {
+                                       
+                                            //$('.question_ph_div').append(response.question_html);
+                                            $(curqdiv).replaceWith(response.question_html)
+                                         
+                                             
+                                      }
+                                      
+                                      
+                                      //console.log(event.currentSlide);
+                                      
+                                      //var btn = currentslide.querySelector("#btn" + response.unique_id);
+                                      //console.log(response.unique_id);
+                                       //$("#btn" + response.unique_id).on("click", function () {
+                                       // console.log ('Button clicked');
+                                      //});
+                                      
+                          
+                          
+                          
+      
+                             
+                        }
+                     });  //end ajax
+                                  
+                //}  //eif qdiv
+              });
+            
+            
+            
+            
+            }
+            
+            
+            /*
             function setupQuestionHtml() {
                 //console.log("cur slide", event.currentSlide);
                 var qdiv = event.currentSlide.querySelector('.question_ph_div');
@@ -479,7 +583,7 @@ $OUTPUT->header();
                 
              }  //end function   
            
-           
+           */
 	
         </script>
 	</body>
